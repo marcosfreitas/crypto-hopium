@@ -370,6 +370,23 @@
       85%  { transform:translateY(-50%) rotate(-12deg) scale(0.97); }
       100% { opacity:1; transform:translateY(-50%) rotate(-12deg) scale(1); }
     }
+
+    @media (max-width: 600px) {
+      .stamp {
+        position: static;
+        transform: rotate(-12deg);
+        display: table; /* shrink-wraps to content width */
+        margin: 20px auto 4px;
+      }
+      .stamp.show { animation: stamp-thud-mobile 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards; }
+    }
+    @keyframes stamp-thud-mobile {
+      0%   { opacity:0; transform:rotate(-12deg) scale(3.5); filter:blur(3px); }
+      55%  { opacity:1; transform:rotate(-12deg) scale(0.92); filter:blur(0); }
+      70%  { transform:rotate(-12deg) scale(1.05); }
+      85%  { transform:rotate(-12deg) scale(0.97); }
+      100% { opacity:1; transform:rotate(-12deg) scale(1); }
+    }
     .stamp-green  { color: var(--green);  border-color: var(--green);  background: rgba(26,92,46,0.06); }
     .stamp-amber  { color: var(--amber);  border-color: var(--amber);  background: rgba(146,64,14,0.06); }
     .stamp-orange { color: var(--orange); border-color: var(--orange); background: rgba(194,65,12,0.06); }
@@ -386,13 +403,14 @@
     .exhibits { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--line); margin-bottom: 28px; }
     @media (max-width: 520px) { .exhibits { grid-template-columns: 1fr; } }
 
-    .exhibit { padding: 18px 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; }
+    .exhibit { padding: 18px 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
     .exhibit:nth-child(2n) { border-right: none; }
     .exhibit:nth-last-child(-n+2) { border-bottom: none; }
     @media (max-width: 520px) { .exhibit { border-right: none; } .exhibit:last-child { border-bottom: none; } }
 
-    .exhibit-tag   { position: absolute; top: 10px; right: 10px; font-family: var(--ff-mono); font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); border: 1px solid var(--line); padding: 1px 5px; }
-    .exhibit-label { font-family: var(--ff-mono); font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+    .exhibit-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+    .exhibit-tag    { flex-shrink: 0; align-self: flex-start; font-family: var(--ff-mono); font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); border: 1px solid var(--line); padding: 1px 5px; white-space: nowrap; }
+    .exhibit-label  { flex: 1; font-family: var(--ff-mono); font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); }
     .exhibit-value { font-family: var(--ff-display); font-size: 1.8rem; letter-spacing: 1px; color: var(--ink); line-height: 1; margin-bottom: 5px; }
     .exhibit-sub   { font-family: var(--ff-mono); font-size: 0.85rem; color: var(--ink-light); font-style: italic; }
 
@@ -676,26 +694,34 @@
     <div class="section-label" data-i18n="exhibits_label">Exhibits</div>
     <div class="exhibits">
       <div class="exhibit">
-        <div class="exhibit-tag" data-i18n="ex_tag_a">Exhibit A</div>
-        <div class="exhibit-label" data-i18n="ex_a">Projected Market Cap</div>
+        <div class="exhibit-header">
+          <div class="exhibit-label" data-i18n="ex_a">Projected Market Cap</div>
+          <div class="exhibit-tag" data-i18n="ex_tag_a">Exhibit A</div>
+        </div>
         <div class="exhibit-value" id="eMarketCap">—</div>
         <div class="exhibit-sub" id="eMarketCapCmp"></div>
       </div>
       <div class="exhibit">
-        <div class="exhibit-tag" data-i18n="ex_tag_b">Exhibit B</div>
-        <div class="exhibit-label" data-i18n="ex_b">Required Price Multiplier</div>
+        <div class="exhibit-header">
+          <div class="exhibit-label" data-i18n="ex_b">Required Price Multiplier</div>
+          <div class="exhibit-tag" data-i18n="ex_tag_b">Exhibit B</div>
+        </div>
         <div class="exhibit-value" id="eMultiplier">—</div>
         <div class="exhibit-sub" data-i18n="ex_b_sub">from current price</div>
       </div>
       <div class="exhibit">
-        <div class="exhibit-tag" data-i18n="ex_tag_c">Exhibit C</div>
-        <div class="exhibit-label" data-i18n="ex_c">Your Projected Return</div>
+        <div class="exhibit-header">
+          <div class="exhibit-label" data-i18n="ex_c">Your Projected Return</div>
+          <div class="exhibit-tag" data-i18n="ex_tag_c">Exhibit C</div>
+        </div>
         <div class="exhibit-value" id="eReturn">—</div>
         <div class="exhibit-sub" id="eReturnCmp"></div>
       </div>
       <div class="exhibit">
-        <div class="exhibit-tag" data-i18n="ex_tag_d">Exhibit D</div>
-        <div class="exhibit-label" data-i18n="ex_d">Coins Purchased</div>
+        <div class="exhibit-header">
+          <div class="exhibit-label" data-i18n="ex_d">Coins Purchased</div>
+          <div class="exhibit-tag" data-i18n="ex_tag_d">Exhibit D</div>
+        </div>
         <div class="exhibit-value" id="eCoins">—</div>
         <div class="exhibit-sub" id="eCoinsCmp"></div>
       </div>
@@ -1397,7 +1423,7 @@ function setInvest(v) { const el = document.getElementById('investment'); el.val
 function setGoal(v)   {
   const el = document.getElementById('richGoal');
   el.value = v;
-  fmtFieldComma(el);
+  maskNumber(el);
 }
 
 // ── Case number ───────────────────────────────────────────────
@@ -1458,6 +1484,9 @@ function calculate() {
   document.getElementById('vCaseNum').textContent     = SESSION_CASE;
 
   const stamp = document.getElementById('verdictStamp');
+  stamp.className = 'stamp'; // reset — remove previous color class and 'show'
+  stamp.textContent = '';
+  void stamp.offsetWidth;   // force reflow before re-applying
   stamp.className = 'stamp ' + vd.stampCls;
   stamp.textContent = t(vd.keys[2]);
   void stamp.offsetWidth;
@@ -1505,7 +1534,7 @@ function calculate() {
   const pos = scalePos(projMcap);
   document.getElementById('threatNeedle').style.left = pos + '%';
   const levels = t('threat_levels');
-  const li = Math.min(levels.length - 1, Math.floor(pos / 20));
+  const li = VERDICT_DEFS.indexOf(vd); // index matches threat_levels order
   document.getElementById('threatReading').textContent = levels[li] + ' — ' + pos.toFixed(0) + '/100';
 
   // ── Evidence rows ────────────────────────────────────────
