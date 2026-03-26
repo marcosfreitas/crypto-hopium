@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Hopium — Reality Check</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Variables ─────────────────────────────────────── */
+    :root {
+      --paper:      #f0e8d0;
+      --paper2:     #e8dfc4;
+      --paper3:     #ddd3b4;
+      --ink:        #231c10;
+      --ink-light:  #5a4e38;
+      --ink-faint:  #5e5040;
+      --line:       #c8bfa4;
+      --red:        #a81c1c;
+      --red-light:  #dc2626;
+      --green:      #1a5c2e;
+      --amber:      #92400e;
+      --orange:     #c2410c;
+      --purple:     #3b0764;
+
+      --ff-display:    'Bebas Neue', sans-serif;
+      --ff-body:       'Special Elite', cursive;
+      --ff-mono:       'Courier Prime', monospace;
+      --ff-condensed:  'Oswald', sans-serif;
+    }
+
+    /* ── Reset & Base ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--paper3);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 0 0 80px;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"),
+        linear-gradient(160deg, #e8dfc4 0%, #ddd3b4 50%, #d6c9a8 100%);
+    }
+
+    /* ── Page Paper ─────────────────────────────────────── */
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--paper);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, #f4ecda 0%, #f0e8d0 40%, #eee0c4 100%);
+      box-shadow:
+        0 0 0 1px var(--line),
+        6px 6px 0 0 var(--paper3),
+        7px 7px 0 1px var(--line),
+        12px 12px 0 0 var(--paper3),
+        13px 13px 0 1px var(--line);
+      position: relative;
+    }
+    @media (max-width: 640px) { .page { box-shadow: 0 0 0 1px var(--line); } }
+
+    .page-inner {
+      padding: 52px 60px 60px;
+    }
+    @media (max-width: 640px) { .page-inner { padding: 32px 24px 48px; } }
+
+    /* Left margin red line */
+    .page-inner::before {
+      content: '';
+      position: absolute;
+      left: 48px;
+      top: 60px;
+      bottom: 0;
+      width: 1px;
+      background: rgba(168,28,28,0.25);
+    }
+    @media (max-width: 640px) { .page-inner::before { display: none; } }
+
+    /* ── Language Bar ────────────────────────────────────── */
+    .lang-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0,0,0,0.025);
+    }
+    .lang-bar-label {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      color: var(--ink-faint);
+      letter-spacing: 1px;
+      margin-right: 8px;
+    }
+    .lang-btn {
+      font-family: var(--ff-mono);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      padding: 3px 10px 2px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink-faint);
+      cursor: pointer;
+      transition: all 0.12s;
+      text-transform: uppercase;
+    }
+    .lang-btn:hover { border-color: var(--ink-light); color: var(--ink-light); }
+    .lang-btn.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    /* ── Horizontal rules ────────────────────────────────── */
+    hr.rule       { border: none; border-top: 1px solid var(--line); margin: 28px 0; }
+    hr.rule-thick { border: none; border-top: 2.5px solid var(--ink); margin: 20px 0 16px; }
+    hr.rule-double{ border: none; border-top: 3px double var(--ink); margin: 32px 0 28px; }
+
+    /* ── File Header ─────────────────────────────────────── */
+    .file-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .file-dept {
+      font-family: var(--ff-mono);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      line-height: 1.8;
+    }
+    .file-num {
+      font-family: var(--ff-mono);
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      text-align: right;
+    }
+    .file-num span { display: block; font-weight: 700; font-size: 1rem; color: var(--ink); }
+
+    /* ── Main Title ──────────────────────────────────────── */
+    .main-title { text-align: center; padding: 8px 0 4px; }
+    .main-title .eyebrow {
+      font-family: var(--ff-condensed);
+      font-weight: 300;
+      font-size: 0.9rem;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 4px;
+    }
+    .main-title h1 {
+      font-family: var(--ff-display);
+      font-size: clamp(3rem, 10vw, 5.5rem);
+      letter-spacing: 4px;
+      line-height: 0.9;
+      color: var(--ink);
+    }
+    .main-title h1 em { color: var(--red); font-style: normal; }
+    .main-title .tagline {
+      font-family: var(--ff-mono);
+      font-size: 0.88rem;
+      color: var(--ink-light);
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+
+    /* ── Section Label ───────────────────────────────────── */
+    .section-label {
+      font-family: var(--ff-condensed);
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+    /* ── Form Fields ─────────────────────────────────────── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 36px; }
+    @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .field { position: relative; }
+    .field.full { grid-column: 1 / -1; }
+
+    .field label {
+      display: block;
+      font-family: var(--ff-mono);
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 6px;
+    }
+    .field input, .field select {
+      width: 100%;
+      font-family: var(--ff-mono);
+      font-size: 1.1rem;
+      color: var(--ink);
+      background: transparent;
+      border: none;
+      border-bottom: 1.5px solid var(--ink-light);
+      padding: 6px 2px 5px;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .field input:focus, .field select:focus { border-bottom-color: var(--red); }
+    .field input::placeholder { color: var(--ink-faint); font-style: italic; }
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a4e38'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 2px center;
+      padding-right: 18px;
+      cursor: pointer;
+    }
+    .field select option { background: var(--paper); color: var(--ink); }
+    .field .hint { font-family: var(--ff-mono); font-size: 0.78rem; color: var(--ink-faint); margin-top: 5px; font-style: italic; }
+
+    /* ── Live Data Row ───────────────────────────────────── */
+    .live-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      min-height: 24px;
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--ff-mono);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border: 1px solid;
+    }
+    .live-badge.loading {
+      color: var(--ink-faint);
+      border-color: var(--line);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    .live-badge.ok    { color: var(--green); border-color: rgba(26,92,46,0.4); background: rgba(26,92,46,0.06); }
+    .live-badge.error { color: var(--red);   border-color: rgba(168,28,28,0.4); background: rgba(168,28,28,0.06); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    .coin-price-tag {
+      font-family: var(--ff-mono);
+      font-size: 0.82rem;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .coin-change {
+      font-family: var(--ff-mono);
+      font-size: 0.75rem;
+      padding: 1px 6px;
+    }
+    .coin-change.pos { color: var(--green); }
+    .coin-change.neg { color: var(--red); }
+
+    /* Pill quick-picks */
+    .pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .pill {
+      font-family: var(--ff-mono);
+      font-size: 0.82rem;
+      padding: 2px 8px;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      color: var(--ink-light);
+      background: transparent;
+      transition: all 0.12s;
+    }
+    .pill:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── Analyze Button ─────────────────────────────────── */
+    .btn-analyze {
+      display: block;
+      width: 100%;
+      margin-top: 32px;
+      padding: 16px 24px;
+      font-family: var(--ff-display);
+      font-size: 1.6rem;
+      letter-spacing: 4px;
+      color: var(--paper);
+      background: var(--ink);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.15s;
+    }
+    .btn-analyze::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(255,255,255,0.12);
+      pointer-events: none;
+    }
+    .btn-analyze:hover  { background: #0d0a05; }
+    .btn-analyze:active { transform: translateY(1px); }
+
+    /* ── Result Section ─────────────────────────────────── */
+    #result { display: none; }
+
+    .result-divider { text-align: center; position: relative; margin: 40px 0 32px; }
+    .result-divider::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%;
+      border-top: 2px solid var(--ink);
+    }
+    .result-divider span {
+      position: relative;
+      background: var(--paper);
+      padding: 0 16px;
+      font-family: var(--ff-condensed);
+      font-weight: 600;
+      font-size: 0.88rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--ink-light);
+    }
+
+    /* ── Verdict Stamp ──────────────────────────────────── */
+    .verdict-wrap  { position: relative; margin-bottom: 36px; }
+    .verdict-body  { border: 2.5px solid var(--line); padding: 28px; position: relative; overflow: hidden; }
+    .verdict-body::before {
+      content: '';
+      position: absolute;
+      top: 6px; left: 6px; right: 6px; bottom: 6px;
+      border: 1px solid var(--line);
+      pointer-events: none;
+    }
+    .verdict-analysis { font-family: var(--ff-mono); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .verdict-text     { font-family: var(--ff-display); font-size: clamp(1.8rem, 6vw, 3rem); color: var(--ink); line-height: 1; margin-bottom: 14px; }
+    .verdict-sub      { font-family: var(--ff-mono); font-size: 0.98rem; color: var(--ink-light); line-height: 1.7; max-width: 540px; }
+
+    .stamp {
+      position: absolute;
+      top: 50%; right: 28px;
+      transform: translateY(-50%) rotate(-12deg);
+      font-family: var(--ff-display);
+      font-size: 2rem;
+      letter-spacing: 3px;
+      border: 5px solid;
+      padding: 6px 14px 4px;
+      line-height: 1;
+      opacity: 0;
+      pointer-events: none;
+      text-transform: uppercase;
+    }
+    .stamp.show { animation: stamp-thud 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards; }
+    @keyframes stamp-thud {
+      0%   { opacity:0; transform:translateY(-50%) rotate(-12deg) scale(3.5); filter:blur(3px); }
+      55%  { opacity:1; transform:translateY(-50%) rotate(-12deg) scale(0.92); filter:blur(0); }
+      70%  { transform:translateY(-50%) rotate(-12deg) scale(1.05); }
+      85%  { transform:translateY(-50%) rotate(-12deg) scale(0.97); }
+      100% { opacity:1; transform:translateY(-50%) rotate(-12deg) scale(1); }
+    }
+    .stamp-green  { color: var(--green);  border-color: var(--green);  background: rgba(26,92,46,0.06); }
+    .stamp-amber  { color: var(--amber);  border-color: var(--amber);  background: rgba(146,64,14,0.06); }
+    .stamp-orange { color: var(--orange); border-color: var(--orange); background: rgba(194,65,12,0.06); }
+    .stamp-red    { color: var(--red);    border-color: var(--red);    background: rgba(168,28,28,0.06); }
+    .stamp-purple { color: var(--purple); border-color: var(--purple); background: rgba(59,7,100,0.08); }
+
+    .vb-green  { background: rgba(26,92,46,0.04); }
+    .vb-amber  { background: rgba(146,64,14,0.04); }
+    .vb-orange { background: rgba(194,65,12,0.05); }
+    .vb-red    { background: rgba(168,28,28,0.06); }
+    .vb-purple { background: rgba(59,7,100,0.07); }
+
+    /* ── Exhibits ────────────────────────────────────────── */
+    .exhibits { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--line); margin-bottom: 28px; }
+    @media (max-width: 520px) { .exhibits { grid-template-columns: 1fr; } }
+
+    .exhibit { padding: 18px 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; }
+    .exhibit:nth-child(2n) { border-right: none; }
+    .exhibit:nth-last-child(-n+2) { border-bottom: none; }
+    @media (max-width: 520px) { .exhibit { border-right: none; } .exhibit:last-child { border-bottom: none; } }
+
+    .exhibit-tag   { position: absolute; top: 10px; right: 10px; font-family: var(--ff-mono); font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); border: 1px solid var(--line); padding: 1px 5px; }
+    .exhibit-label { font-family: var(--ff-mono); font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+    .exhibit-value { font-family: var(--ff-display); font-size: 1.8rem; letter-spacing: 1px; color: var(--ink); line-height: 1; margin-bottom: 5px; }
+    .exhibit-sub   { font-family: var(--ff-mono); font-size: 0.85rem; color: var(--ink-light); font-style: italic; }
+
+    /* ── Threat Level ─────────────────────────────────────── */
+    .threat-section { margin-bottom: 28px; }
+    .threat-label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+    .threat-title   { font-family: var(--ff-condensed); font-weight: 600; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; color: var(--ink-light); }
+    .threat-reading { font-family: var(--ff-mono); font-size: 0.85rem; color: var(--ink-faint); }
+    .threat-track   { height: 12px; background: linear-gradient(to right, #1a5c2e, #78350f, #c2410c, #a81c1c, #3b0764); position: relative; border: 1px solid var(--line); }
+    .threat-track::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(90deg, transparent, transparent calc(25% - 1px), rgba(240,232,208,0.35) calc(25% - 1px), rgba(240,232,208,0.35) 25%);
+    }
+    .threat-needle {
+      position: absolute;
+      top: -6px;
+      width: 3px;
+      height: 24px;
+      background: var(--ink);
+      transform: translateX(-50%);
+      transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 1px 0 0 0 var(--paper);
+    }
+    .threat-needle::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 9px;
+      height: 9px;
+      background: var(--ink);
+      border-radius: 50%;
+    }
+    .threat-ticks { position: relative; height: 20px; margin-top: 8px; }
+    .threat-ticks span {
+      position: absolute;
+      transform: translateX(-50%);
+      font-family: var(--ff-mono);
+      font-size: 0.66rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+    .threat-ticks span:nth-child(1) { left:  8%; }
+    .threat-ticks span:nth-child(2) { left: 20%; }
+    .threat-ticks span:nth-child(3) { left: 32%; }
+    .threat-ticks span:nth-child(4) { left: 46%; }
+    .threat-ticks span:nth-child(5) { left: 61%; }
+    .threat-ticks span:nth-child(6) { left: 75%; }
+    .threat-ticks span:nth-child(7) { left: 90%; }
+
+    /* ── Evidence File ───────────────────────────────────── */
+    .evidence-file { border: 1.5px solid var(--line); margin-bottom: 28px; }
+    .evidence-file-header { background: var(--ink); color: var(--paper); font-family: var(--ff-condensed); font-weight: 600; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; padding: 9px 16px; display: flex; justify-content: space-between; }
+    .evidence-row { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid var(--line); font-size: 0.9rem; }
+    .evidence-row:last-child { border-bottom: none; }
+    .ev-icon  { width: 22px; text-align: center; font-size: 1rem; flex-shrink: 0; }
+    .ev-logo  { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+    .ev-name  { flex: 1; font-family: var(--ff-mono); font-size: 0.88rem; color: var(--ink-light); }
+    .ev-val   { font-family: var(--ff-mono); font-size: 0.92rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+    .ev-badge { font-family: var(--ff-condensed); font-weight: 700; font-size: 0.75rem; letter-spacing: 1.5px; padding: 2px 7px; white-space: nowrap; flex-shrink: 0; }
+    .ev-below { background: rgba(26,92,46,0.12);  color: var(--green); border: 1px solid rgba(26,92,46,0.3); }
+    .ev-above { background: rgba(168,28,28,0.1);  color: var(--red);   border: 1px solid rgba(168,28,28,0.3); }
+
+    /* ── Case Notes ──────────────────────────────────────── */
+    .case-notes { border: 1.5px solid var(--line); margin-bottom: 28px; }
+    .case-notes-header { background: var(--ink); color: var(--paper); font-family: var(--ff-condensed); font-weight: 600; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; padding: 9px 16px; }
+    .case-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 16px; border-bottom: 1px solid var(--line); gap: 12px; }
+    .case-row:last-child { border-bottom: none; }
+    .case-key { font-family: var(--ff-mono); font-size: 0.88rem; color: var(--ink-light); }
+    .case-val { font-family: var(--ff-mono); font-size: 0.92rem; font-weight: 700; color: var(--ink); text-align: right; }
+    .case-val.flag-red   { color: var(--red); }
+    .case-val.flag-green { color: var(--green); }
+    .case-val.flag-amber { color: var(--amber); }
+
+    /* ── Warning Box ─────────────────────────────────────── */
+    .warning-box { border: 2px solid var(--red); padding: 24px 22px 20px; margin-bottom: 28px; position: relative; }
+    .warning-box p { font-family: var(--ff-mono); font-size: 0.95rem; color: var(--ink-light); line-height: 1.7; }
+    .warning-box strong { color: var(--red); }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    .page-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center; }
+    .page-footer p { font-family: var(--ff-mono); font-size: 0.78rem; color: var(--ink-faint); line-height: 1.8; letter-spacing: 0.5px; }
+
+    .sig-line { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .sig-block { display: flex; flex-direction: column; align-items: center; min-width: 140px; flex: 1; justify-content: flex-end; }
+    .sig-block svg { display: block; margin-bottom: 2px; overflow: visible; }
+    .sig-block .sig-label { font-family: var(--ff-mono); font-size: 0.72rem; color: var(--ink-faint); border-top: 1px solid var(--ink-faint); padding-top: 4px; width: 100%; text-align: center; margin-top: 4px; }
+    .sig-block .sig-value { font-family: var(--ff-mono); font-size: 0.88rem; color: var(--ink); font-weight: 700; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Language Bar ──────────────────────────────────── -->
+  <div class="lang-bar">
+    <span class="lang-bar-label" data-i18n="lang_label">Language</span>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+    <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">Português</button>
+  </div>
+
+  <div class="page-inner">
+
+  <!-- ── File Header ──────────────────────────────────── -->
+  <div class="file-header">
+    <div class="file-dept" data-i18n-html="dept_block"></div>
+    <div class="file-num">
+      Form CH-2026 Rev.1<br>
+      <span id="caseNum">CASE #——</span>
+    </div>
+  </div>
+
+  <hr class="rule-thick" />
+
+  <!-- ── Title ─────────────────────────────────────────── -->
+  <div class="main-title">
+    <div class="eyebrow" data-i18n="eyebrow">Financial Fraud Forensics</div>
+    <h1>CRYPTO <em>HOPIUM</em><br><span data-i18n="title_sub">REALITY CHECK</span></h1>
+    <div class="tagline" data-i18n="tagline">// Projected Market Cap · Return Analysis · Delusion Scale //</div>
+  </div>
+
+  <hr class="rule-double" />
+
+  <!-- ── Section I ─────────────────────────────────────── -->
+  <div class="section-label" data-i18n="section1">Section I — Subject Identification</div>
+  <div class="form-grid">
+
+    <div class="field full">
+      <label data-i18n="label_preset">Coin Preset (auto-fills supply &amp; current price)</label>
+      <select id="coinPreset" onchange="applyPreset()">
+        <option value="" data-i18n="opt_manual">— enter manually below —</option>
+        <optgroup label="── Layer 1 ──────────────────">
+          <option value="bitcoin">Bitcoin (BTC)</option>
+          <option value="ethereum">Ethereum (ETH)</option>
+          <option value="bnb">BNB (BNB)</option>
+          <option value="solana">Solana (SOL)</option>
+          <option value="ripple">XRP — Ripple (XRP)</option>
+          <option value="cardano">Cardano (ADA)</option>
+          <option value="tron">TRON (TRX)</option>
+          <option value="the-open-network">Toncoin (TON)</option>
+          <option value="avalanche-2">Avalanche (AVAX)</option>
+          <option value="polkadot">Polkadot (DOT)</option>
+          <option value="near">NEAR Protocol (NEAR)</option>
+          <option value="sui">Sui (SUI)</option>
+          <option value="aptos">Aptos (APT)</option>
+          <option value="hedera-hashgraph">Hedera (HBAR)</option>
+          <option value="internet-computer">Internet Computer (ICP)</option>
+          <option value="algorand">Algorand (ALGO)</option>
+          <option value="cosmos">Cosmos (ATOM)</option>
+          <option value="stellar">Stellar (XLM)</option>
+          <option value="vechain">VeChain (VET)</option>
+          <option value="sei-network">Sei (SEI)</option>
+          <option value="theta-network">Theta Network (THETA)</option>
+          <option value="eos">EOS (EOS)</option>
+          <option value="fantom">Fantom (FTM)</option>
+          <option value="bittensor">Bittensor (TAO)</option>
+        </optgroup>
+        <optgroup label="── Bitcoin Forks ─────────────">
+          <option value="bitcoin-cash">Bitcoin Cash (BCH)</option>
+          <option value="litecoin">Litecoin (LTC)</option>
+          <option value="ethereum-classic">Ethereum Classic (ETC)</option>
+        </optgroup>
+        <optgroup label="── DeFi &amp; L2 ──────────────">
+          <option value="chainlink">Chainlink (LINK)</option>
+          <option value="uniswap">Uniswap (UNI)</option>
+          <option value="aave">Aave (AAVE)</option>
+          <option value="maker">Maker (MKR)</option>
+          <option value="injective-protocol">Injective (INJ)</option>
+          <option value="arbitrum">Arbitrum (ARB)</option>
+          <option value="optimism">Optimism (OP)</option>
+          <option value="stacks">Stacks (STX)</option>
+          <option value="the-graph">The Graph (GRT)</option>
+          <option value="immutable-x">Immutable (IMX)</option>
+          <option value="render-token">Render (RENDER)</option>
+          <option value="filecoin">Filecoin (FIL)</option>
+          <option value="the-sandbox">The Sandbox (SAND)</option>
+          <option value="gala">Gala (GALA)</option>
+          <option value="crypto-com-chain">Cronos (CRO)</option>
+        </optgroup>
+        <optgroup label="── Meme Coins ───────────────">
+          <option value="dogecoin">Dogecoin (DOGE)</option>
+          <option value="shiba-inu">Shiba Inu (SHIB)</option>
+          <option value="pepe">PEPE (PEPE)</option>
+          <option value="floki">Floki (FLOKI)</option>
+          <option value="bonk">Bonk (BONK)</option>
+          <option value="dogwifcoin">dogwifhat (WIF)</option>
+        </optgroup>
+      </select>
+      <!-- Live data indicator -->
+      <div class="live-row">
+        <span class="live-badge loading" id="liveBadge" style="visibility:hidden">
+          <span class="live-dot"></span>
+          <span id="liveBadgeText" data-i18n="live_loading">loading market data…</span>
+        </span>
+        <span class="coin-price-tag" id="coinPriceTag"></span>
+        <span class="coin-change" id="coinChangeTag"></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label data-i18n="label_supply">Circulating Supply</label>
+      <input type="text" inputmode="numeric" id="supply" data-i18n-ph="ph_supply" placeholder="e.g. 57,940,000,000" oninput="maskNumber(this)" />
+      <div class="hint" data-i18n="hint_supply">Total coins in circulation</div>
+    </div>
+
+    <div class="field">
+      <label data-i18n="label_current">Current Price (USD)</label>
+      <input type="text" inputmode="decimal" id="currentPrice" data-i18n-ph="ph_current" placeholder="e.g. 0.50" oninput="maskNumber(this)" />
+      <div class="hint" data-i18n="hint_current">Today's price — used for ROI calc</div>
+    </div>
+
+  </div>
+
+  <hr class="rule" />
+
+  <!-- ── Section II ────────────────────────────────────── -->
+  <div class="section-label" data-i18n="section2">Section II — The Claim Under Investigation</div>
+  <div class="form-grid">
+
+    <div class="field">
+      <label data-i18n="label_target">Predicted / Target Price (USD)</label>
+      <input type="text" inputmode="decimal" id="targetPrice" data-i18n-ph="ph_target" placeholder="e.g. 10.00" oninput="maskNumber(this)" />
+      <div class="hint" data-i18n="hint_target">"To the moon" price</div>
+    </div>
+
+    <div class="field">
+      <label data-i18n="label_years">Claimed Timeframe (years)</label>
+      <input type="number" id="years" data-i18n-ph="ph_years" placeholder="e.g. 5" min="0" step="any" />
+      <div class="hint" data-i18n="hint_years">Optional — how long they claim</div>
+    </div>
+
+    <div class="field">
+      <label data-i18n="label_invest">Your Investment (USD)</label>
+      <input type="text" inputmode="decimal" id="investment" value="100" oninput="maskNumber(this)" />
+      <div class="pills">
+        <span class="pill" onclick="setInvest(100)">$100</span>
+        <span class="pill" onclick="setInvest(500)">$500</span>
+        <span class="pill" onclick="setInvest(1000)">$1 000</span>
+        <span class="pill" onclick="setInvest(5000)">$5 000</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label data-i18n="label_rich">Your "Rich" Goal (USD)</label>
+      <input type="text" inputmode="numeric" id="richGoal" value="1,000,000" oninput="maskNumber(this)" />
+      <div class="pills">
+        <span class="pill" onclick="setGoal(100000)">$100k</span>
+        <span class="pill" onclick="setGoal(1000000)">$1M</span>
+        <span class="pill" onclick="setGoal(10000000)">$10M</span>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="btn-analyze" onclick="calculate()" data-i18n="btn_analyze">ANALYZE THE CLAIM</button>
+
+  <!-- ══════════════════════════════════════════════════
+       RESULT
+  ══════════════════════════════════════════════════ -->
+  <div id="result">
+
+    <div class="result-divider"><span data-i18n="report_divider">Analysis Report</span></div>
+
+    <!-- Verdict -->
+    <div class="verdict-wrap">
+      <div id="verdictBody" class="verdict-body">
+        <div class="verdict-analysis">
+          <span data-i18n="verdict_label">Verdict</span> — <span data-i18n="case_label">Case</span>
+          <span id="vCaseNum"></span> &nbsp;|&nbsp; <span id="vPriceSummary"></span>
+        </div>
+        <div id="verdictTitle" class="verdict-text"></div>
+        <div id="verdictSub" class="verdict-sub"></div>
+        <div id="verdictStamp" class="stamp"></div>
+      </div>
+    </div>
+
+    <!-- Exhibits -->
+    <div class="section-label" data-i18n="exhibits_label">Exhibits</div>
+    <div class="exhibits">
+      <div class="exhibit">
+        <div class="exhibit-tag" data-i18n="ex_tag_a">Exhibit A</div>
+        <div class="exhibit-label" data-i18n="ex_a">Projected Market Cap</div>
+        <div class="exhibit-value" id="eMarketCap">—</div>
+        <div class="exhibit-sub" id="eMarketCapCmp"></div>
+      </div>
+      <div class="exhibit">
+        <div class="exhibit-tag" data-i18n="ex_tag_b">Exhibit B</div>
+        <div class="exhibit-label" data-i18n="ex_b">Required Price Multiplier</div>
+        <div class="exhibit-value" id="eMultiplier">—</div>
+        <div class="exhibit-sub" data-i18n="ex_b_sub">from current price</div>
+      </div>
+      <div class="exhibit">
+        <div class="exhibit-tag" data-i18n="ex_tag_c">Exhibit C</div>
+        <div class="exhibit-label" data-i18n="ex_c">Your Projected Return</div>
+        <div class="exhibit-value" id="eReturn">—</div>
+        <div class="exhibit-sub" id="eReturnCmp"></div>
+      </div>
+      <div class="exhibit">
+        <div class="exhibit-tag" data-i18n="ex_tag_d">Exhibit D</div>
+        <div class="exhibit-label" data-i18n="ex_d">Coins Purchased</div>
+        <div class="exhibit-value" id="eCoins">—</div>
+        <div class="exhibit-sub" id="eCoinsCmp"></div>
+      </div>
+    </div>
+
+    <!-- Threat Level -->
+    <div class="threat-section">
+      <div class="threat-label-row">
+        <span class="threat-title" data-i18n="threat_title">Threat Level — Delusion Meter</span>
+        <span class="threat-reading" id="threatReading"></span>
+      </div>
+      <div class="threat-track">
+        <div class="threat-needle" id="threatNeedle" style="left:2%"></div>
+      </div>
+      <div class="threat-ticks" id="threatTicks">
+        <span data-i18n="tick_1">Plausible</span>
+        <span data-i18n="tick_2">Speculative</span>
+        <span data-i18n="tick_3">Ambitious</span>
+        <span data-i18n="tick_4">Unlikely</span>
+        <span data-i18n="tick_5">Delusional</span>
+        <span data-i18n="tick_6">Impossible</span>
+        <span data-i18n="tick_7">Cosmic</span>
+      </div>
+    </div>
+
+    <!-- Evidence File -->
+    <div class="evidence-file">
+      <div class="evidence-file-header">
+        <span data-i18n="ev_header_1">Market Cap Evidence File</span>
+        <span data-i18n="ev_header_2">Projected vs. Reference Points</span>
+      </div>
+      <div id="evidenceRows"></div>
+    </div>
+
+    <!-- Case Notes -->
+    <div id="caseNotesWrap"></div>
+
+    <!-- Warning -->
+    <div id="warningWrap"></div>
+
+    <!-- Signature -->
+    <div class="sig-line">
+
+      <!-- Block 1: Authorizer — signature + name -->
+      <div class="sig-block">
+        <svg width="160" height="58" viewBox="0 0 160 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- M: upstroke, first arch, valley, second arch, valley -->
+          <path d="M 8,48 C 8,30 12,12 15,12 C 17,12 19,28 21,20 C 23,12 27,8 30,10 C 32,12 34,28 36,44"
+                stroke="#231c10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.85"/>
+          <!-- a: oval loop connecting from M -->
+          <path d="M 36,44 C 38,30 42,20 46,24 C 50,28 49,40 52,38 C 54,36 54,30 56,32"
+                stroke="#231c10" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.85"/>
+          <!-- t: tall upstroke, descend, blend into h -->
+          <path d="M 56,32 C 57,22 58,6 60,8 C 62,10 62,26 63,34"
+                stroke="#231c10" stroke-width="1.9" stroke-linecap="round" fill="none" opacity="0.85"/>
+          <!-- t crossbar -->
+          <path d="M 52,23 C 56,21 62,20 68,22"
+                stroke="#231c10" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6"/>
+          <!-- h: ascender, arch, return to baseline, trailing flourish -->
+          <path d="M 63,34 C 65,20 68,10 71,12 C 74,14 76,28 78,38 C 80,44 84,46 92,44 C 104,42 118,40 132,38"
+                stroke="#231c10" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.85"/>
+          <!-- underline sweep -->
+          <path d="M 6,52 C 50,57 100,56 134,50"
+                stroke="#231c10" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.38"/>
+        </svg>
+        <div class="sig-value" style="margin-bottom:4px;">Math Doe</div>
+        <div class="sig-label" data-i18n="sig_1">Authorizer</div>
+      </div>
+
+      <!-- Block 2: Date of Analysis — no changes -->
+      <div class="sig-block">
+        <div class="sig-value" id="sigDate" style="margin-bottom:6px; margin-top:8px;"></div>
+        <div class="sig-label" data-i18n="sig_2">Date of Analysis</div>
+      </div>
+
+      <!-- Block 3: Authorizing Sector — dynamic year -->
+      <div class="sig-block">
+        <div class="sig-value" id="sigSector" style="margin-bottom:6px; margin-top:8px;"></div>
+        <div class="sig-label" data-i18n="sig_3">Authorizing Sector</div>
+      </div>
+
+    </div>
+
+  </div><!-- #result -->
+
+  <!-- ── Footer ────────────────────────────────────────── -->
+  <div class="page-footer">
+    <p data-i18n="footer_text">
+      Price data sourced from Binance. For educational purposes only. Not financial advice.
+    </p>
+  </div>
+
+  </div><!-- .page-inner -->
+</div><!-- .page -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  TRANSLATIONS
+// ══════════════════════════════════════════════════════════════
+const T = {
+  en: {
+    lang_label:      'Language:',
+    dept_block:      'Department of Financial Sobriety<br>Division of Crypto Claim Analysis<br>Classification: Public',
+    eyebrow:         'Financial Fraud Forensics',
+    title_sub:       'REALITY CHECK',
+    tagline:         '// Projected Market Cap · Return Analysis · Delusion Scale //',
+    section1:        'Section I — Subject Identification',
+    section2:        'Section II — The Claim Under Investigation',
+    label_preset:    'Coin Preset (auto-fills supply & current price)',
+    opt_manual:      '— enter manually below —',
+    label_supply:    'Circulating Supply',
+    ph_supply:       'e.g. 57,940,000,000',
+    hint_supply:     'Total coins in circulation',
+    label_current:   'Current Price (USD)',
+    ph_current:      'e.g. 0.50',
+    hint_current:    "Today's price — used for ROI calc",
+    label_target:    'Predicted / Target Price (USD)',
+    ph_target:       'e.g. 10.00',
+    hint_target:     '"To the moon" price',
+    label_years:     'Claimed Timeframe (years)',
+    ph_years:        'e.g. 5',
+    hint_years:      'Optional — how long they claim',
+    label_invest:    'Your Investment (USD)',
+    label_rich:      'Your "Rich" Goal (USD)',
+    btn_analyze:     'ANALYZE THE CLAIM',
+    report_divider:  'Analysis Report',
+    verdict_label:   'Verdict',
+    case_label:      'Case',
+    supply_lbl:      'Supply',
+    current_lbl:     'Current',
+    target_lbl:      'Target price',
+    exhibits_label:  'Exhibits',
+    ex_tag_a: 'Exhibit A', ex_a: 'Projected Market Cap',
+    ex_tag_b: 'Exhibit B', ex_b: 'Required Price Multiplier', ex_b_sub: 'from current price',
+    ex_tag_c: 'Exhibit C', ex_c: 'Your Projected Return',
+    ex_tag_d: 'Exhibit D', ex_d: 'Coins Purchased',
+    threat_title:    'Threat Level — Delusion Meter',
+    tick_1: 'Plausible', tick_2: 'Speculative', tick_3: 'Ambitious', tick_4: 'Unlikely', tick_5: 'Delusional', tick_6: 'Impossible', tick_7: 'Cosmic',
+    threat_levels:   ['Plausible','Speculative','Ambitious','Unlikely','Delusional','Impossible','Cosmic'],
+    ev_header_1:     'Market Cap Evidence File',
+    ev_header_2:     'Projected vs. Reference Points',
+    ev_above:        '↑ {r}× ABOVE',
+    ev_below:        '↓ {r}× BELOW',
+    above_lbl:       'above',
+    below_lbl:       'below',
+    sig_1: 'Authorizer', sig_2: 'Date of Analysis', sig_3: 'Authorizing Sector',
+    footer_text:     'Price data sourced from Binance API. For educational purposes only. Not financial advice. Past performance does not indicate future results.',
+    live_loading:    'loading market data…',
+    live_ok:         'live data',
+    live_error:      'live data unavailable — using presets',
+    enter_price:     'enter current price',
+    of_supply:       '% of supply',
+    mcap_bigger:     '{r}× bigger than {name}',
+    mcap_smaller:    '{r}× smaller than {name}',
+    return_gain:     '+{x} on {inv}',
+    return_loss:     'Loss of {pct}%',
+
+    // Verdict titles/subs
+    v_cosmic_title:  '☠ COSMIC DELUSION',
+    v_cosmic_sub:    'This projected market cap would exceed the total wealth of all humanity. You would need to collapse every financial market on Earth — simultaneously — to achieve this price.',
+    v_cosmic_stamp:  'COSMIC',
+    v_math_title:    '⬛ MATHEMATICALLY IMPOSSIBLE',
+    v_math_sub:      'Projected market cap surpasses every global stock market combined. No asset in human history has approached this scale. This claim does not pass a basic sanity check.',
+    v_math_stamp:    'DELUSIONAL',
+    v_del_title:     '🔴 DELUSIONAL',
+    v_del_sub:       'Would require this coin to exceed the value of all gold ever mined on Earth. Extraordinary claims require extraordinary evidence — and none exists for this scenario.',
+    v_del_stamp:     'DELUSIONAL',
+    v_unl_title:     '🟠 EXTREMELY UNLIKELY',
+    v_unl_sub:       'Would require surpassing the entire current crypto market by a wide margin. While theoretically possible in a decade-long bull run, the probability is very low.',
+    v_unl_stamp:     'UNLIKELY',
+    v_amb_title:     '🟡 VERY AMBITIOUS',
+    v_amb_sub:       'Would require flipping Bitcoin as the dominant crypto asset. Only Bitcoin has historically sustained this level. Treat with serious skepticism.',
+    v_amb_stamp:     'AMBITIOUS',
+    v_spe_title:     '🟡 SPECULATIVE',
+    v_spe_sub:       'Would require becoming a top-two crypto asset. Possible for fundamentally strong projects in a bull market, but far from guaranteed.',
+    v_spe_stamp:     'SPECULATIVE',
+    v_pla_title:     '🟢 PLAUSIBLE',
+    v_pla_sub:       'The math stays within the range of existing large-cap crypto assets. Still highly speculative, but not delusional by market cap alone.',
+    v_pla_stamp:     'PLAUSIBLE',
+
+    // Case notes
+    notes_header:    'Case Notes — Time & Return Analysis',
+    cagr_row:        'Required CAGR to hit target in {y} yr',
+    cagr_val:        '{c}% per year',
+    tf_row:          'Claimed timeframe',
+    yr_singular:     'year',
+    yr_plural:       'years',
+    rich_row:        'Will ${inv} reach {goal}?',
+    rich_yes:        'YES — if target price is reached',
+    rich_no:         "NO — you'd have {val}",
+    sp500_row:       'S&P 500 (10%/yr) matches this return in',
+    sp500_val:       '{y} years',
+    index_row:       '${inv} in S&P 500 index after {y} yr',
+
+    // Warning
+    warn_label:      '⚠ WARNING',
+    warn_p1:         'A boring S&P 500 index fund at 10%/year would match this return in <strong>{y} years</strong>.',
+    warn_p2_long:    'If the crypto takes longer than 80 years to reach this target, you are not investing — you are playing a lottery with a century-long delay.',
+    warn_p2_short:   "If the crypto claim's own timeline is slower than this, the index fund wins without the volatility.",
+    warn_inflation:  'Inflation reminder: $1,000,000 in {y} years will buy roughly what <strong>${v}</strong> buys today (at 2.5% annual inflation). A skeleton cannot spend gains.',
+
+    // Anchor names
+    anc_eth:  'Ethereum market cap (current)',
+    anc_btc:  'Bitcoin market cap (current)',
+    anc_tot:  'Total crypto market',
+    anc_gold: 'All gold in the world',
+    anc_sp:   'S&P 500 total market cap',
+    anc_stk:  'All global stock markets',
+    anc_gdp:  'Annual world GDP',
+    anc_wlth: 'Total human wealth',
+
+    // fmt magnitude words
+    mag_quadrillion: 'quadrillion',
+    mag_trillion:    'trillion',
+    mag_billion:     'billion',
+    mag_million:     'million',
+  },
+
+  pt: {
+    lang_label:      'Idioma:',
+    dept_block:      'Departamento de Sobriedade Financeira<br>Divisão de Análise de Alegações Cripto<br>Classificação: Público',
+    eyebrow:         'Perícia em Fraudes Financeiras',
+    title_sub:       'VERIFICAÇÃO DA REALIDADE',
+    tagline:         '// Cap. de Mercado Projetada · Análise de Retorno · Escala de Ilusão //',
+    section1:        'Seção I — Identificação do Ativo',
+    section2:        'Seção II — A Alegação em Análise',
+    label_preset:    'Preset de Moeda (preenche fornecimento e preço atual)',
+    opt_manual:      '— inserir manualmente abaixo —',
+    label_supply:    'Fornecimento Circulante',
+    ph_supply:       'ex: 57.940.000.000',
+    hint_supply:     'Total de moedas em circulação',
+    label_current:   'Preço Atual (USD)',
+    ph_current:      'ex: 0,50',
+    hint_current:    'Preço hoje — usado para calcular retorno',
+    label_target:    'Preço Previsto / Alvo (USD)',
+    ph_target:       'ex: 10,00',
+    hint_target:     'O preço "pra lua"',
+    label_years:     'Prazo Alegado (anos)',
+    ph_years:        'ex: 5',
+    hint_years:      'Opcional — quanto tempo alegam',
+    label_invest:    'Seu Investimento (USD)',
+    label_rich:      'Sua Meta de "Ficar Rico" (USD)',
+    btn_analyze:     'ANALISAR A ALEGAÇÃO',
+    report_divider:  'Relatório de Análise',
+    verdict_label:   'Veredicto',
+    case_label:      'Caso',
+    supply_lbl:      'Fornecimento',
+    current_lbl:     'Atual',
+    target_lbl:      'Preço alvo',
+    exhibits_label:  'Evidências',
+    ex_tag_a: 'Evidência A', ex_a: 'Cap. de Mercado Projetada',
+    ex_tag_b: 'Evidência B', ex_b: 'Multiplicador de Preço Necessário', ex_b_sub: 'a partir do preço atual',
+    ex_tag_c: 'Evidência C', ex_c: 'Seu Retorno Projetado',
+    ex_tag_d: 'Evidência D', ex_d: 'Moedas Compradas',
+    threat_title:    'Nível de Ameaça — Medidor de Ilusão',
+    tick_1: 'Plausível', tick_2: 'Especulativo', tick_3: 'Ambicioso', tick_4: 'Improvável', tick_5: 'Ilusório', tick_6: 'Impossível', tick_7: 'Cósmico',
+    threat_levels:   ['Plausível','Especulativo','Ambicioso','Improvável','Ilusório','Impossível','Cósmico'],
+    ev_header_1:     'Arquivo de Evidências — Cap. de Mercado',
+    ev_header_2:     'Projetado vs. Pontos de Referência',
+    ev_above:        '↑ {r}× ACIMA',
+    ev_below:        '↓ {r}× ABAIXO',
+    above_lbl:       'acima de',
+    below_lbl:       'abaixo de',
+    sig_1: 'Autorizador', sig_2: 'Data da Análise', sig_3: 'Setor Autorizador',
+    footer_text:     'Dados de fornecimento e preço obtidos da API CoinCap. Apenas para fins educativos. Não é conselho financeiro. Desempenho passado não indica resultados futuros.',
+    live_loading:    'carregando dados de mercado…',
+    live_ok:         'dados ao vivo',
+    live_error:      'dados ao vivo indisponíveis — usando valores padrão',
+    enter_price:     'insira o preço atual',
+    of_supply:       '% do fornecimento',
+    mcap_bigger:     '{r}× maior que {name}',
+    mcap_smaller:    '{r}× menor que {name}',
+    return_gain:     '+{x} sobre {inv}',
+    return_loss:     'Perda de {pct}%',
+
+    v_cosmic_title:  '☠ ILUSÃO CÓSMICA',
+    v_cosmic_sub:    'Esta cap. de mercado projetada excederia a riqueza total de toda a humanidade. Seria necessário colapsar todos os mercados financeiros da Terra — simultaneamente — para atingir este preço.',
+    v_cosmic_stamp:  'CÓSMICO',
+    v_math_title:    '⬛ MATEMATICAMENTE IMPOSSÍVEL',
+    v_math_sub:      'A cap. de mercado projetada supera todos os mercados de ações globais combinados. Nenhum ativo na história humana chegou perto dessa escala. Esta alegação não passa nem em uma verificação básica de sanidade.',
+    v_math_stamp:    'ILUSÓRIO',
+    v_del_title:     '🔴 ILUSÓRIO',
+    v_del_sub:       'Exigiria que esta moeda superasse o valor de todo o ouro já extraído na Terra. Alegações extraordinárias exigem evidências extraordinárias — e nenhuma existe para este cenário.',
+    v_del_stamp:     'ILUSÓRIO',
+    v_unl_title:     '🟠 EXTREMAMENTE IMPROVÁVEL',
+    v_unl_sub:       'Exigiria superar todo o mercado cripto atual por uma ampla margem. Embora teoricamente possível em uma bull run de décadas, a probabilidade é muito baixa.',
+    v_unl_stamp:     'IMPROVÁVEL',
+    v_amb_title:     '🟡 MUITO AMBICIOSO',
+    v_amb_sub:       'Exigiria superar o Bitcoin como ativo cripto dominante. Apenas o Bitcoin sustentou historicamente esse nível. Trate com ceticismo sério.',
+    v_amb_stamp:     'AMBICIOSO',
+    v_spe_title:     '🟡 ESPECULATIVO',
+    v_spe_sub:       'Exigiria se tornar um dos dois maiores ativos cripto. Possível para projetos fundamentalmente sólidos em um mercado em alta, mas longe de ser garantido.',
+    v_spe_stamp:     'ESPECULATIVO',
+    v_pla_title:     '🟢 PLAUSÍVEL',
+    v_pla_sub:       'A matemática permanece dentro do intervalo dos grandes ativos cripto existentes. Ainda altamente especulativo, mas não delusional apenas pela cap. de mercado.',
+    v_pla_stamp:     'PLAUSÍVEL',
+
+    notes_header:    'Notas do Caso — Análise de Tempo e Retorno',
+    cagr_row:        'CAGR necessário para atingir a meta em {y} anos',
+    cagr_val:        '{c}% ao ano',
+    tf_row:          'Prazo alegado',
+    yr_singular:     'ano',
+    yr_plural:       'anos',
+    rich_row:        '${inv} vai chegar a {goal}?',
+    rich_yes:        'SIM — se o preço alvo for atingido',
+    rich_no:         'NÃO — você teria {val}',
+    sp500_row:       'S&P 500 (10%/ano) iguala este retorno em',
+    sp500_val:       '{y} anos',
+    index_row:       '${inv} no índice S&P 500 após {y} anos',
+
+    warn_label:      '⚠ AVISO',
+    warn_p1:         'Um tedioso fundo de índice S&P 500 a 10%/ano igualaria este retorno em <strong>{y} anos</strong>.',
+    warn_p2_long:    'Se a cripto levar mais de 80 anos para atingir essa meta, você não está investindo — está jogando na loteria com um atraso de um século.',
+    warn_p2_short:   'Se o prazo alegado pela cripto for mais lento que isso, o fundo de índice vence sem a volatilidade.',
+    warn_inflation:  'Lembrete de inflação: $1.000.000 em {y} anos comprará aproximadamente o que <strong>${v}</strong> compra hoje (a 2,5% de inflação anual). Um esqueleto não pode gastar ganhos.',
+
+    anc_eth:  'Cap. de mercado do Ethereum (atual)',
+    anc_btc:  'Cap. de mercado do Bitcoin (atual)',
+    anc_tot:  'Mercado cripto total',
+    anc_gold: 'Todo o ouro do mundo',
+    anc_sp:   'Cap. de mercado total do S&P 500',
+    anc_stk:  'Todos os mercados de ações globais',
+    anc_gdp:  'PIB mundial anual',
+    anc_wlth: 'Riqueza humana total',
+
+    mag_quadrillion: 'quatrilhão',
+    mag_trillion:    'trilhão',
+    mag_billion:     'bilhão',
+    mag_million:     'milhão',
+  }
+};
+
+// ── i18n helpers ──────────────────────────────────────────────
+let LANG = 'en';
+
+function t(key) { return T[LANG][key] ?? T.en[key] ?? key; }
+
+function tpl(key, vars) {
+  let s = t(key);
+  for (const [k, v] of Object.entries(vars)) s = s.replaceAll('{' + k + '}', v);
+  return s;
+}
+
+function applyTranslations() {
+  document.documentElement.lang = LANG === 'pt' ? 'pt-BR' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    el.innerHTML = t(el.dataset.i18nHtml);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPh);
+  });
+}
+
+function setLang(lang) {
+  LANG = lang;
+  localStorage.setItem('hopium-lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === lang)
+  );
+  applyTranslations();
+  // Re-render results if visible and inputs are still valid (skip alert)
+  const supply  = parseFloat(document.getElementById('supply').value);
+  const targetP = parseFloat(document.getElementById('targetPrice').value);
+  if (document.getElementById('result').style.display !== 'none' && supply && targetP) calculate();
+}
+
+// ── Language detection on load ────────────────────────────────
+(function initLang() {
+  const saved = localStorage.getItem('hopium-lang');
+  const browser = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  LANG = saved || (browser.startsWith('pt') ? 'pt' : 'en');
+  document.querySelectorAll('.lang-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === LANG)
+  );
+  applyTranslations();
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  COINS DATA  (fallback values — overridden by live API)
+// ══════════════════════════════════════════════════════════════
+const COINS = {
+  // ── Existing ──────────────────────────────────────────────
+  'bitcoin':            { symbol: 'BTC',    supply: 19800000,            fallbackPrice: 105000    },
+  'ethereum':           { symbol: 'ETH',    supply: 120450000,           fallbackPrice: 3500      },
+  'ripple':             { symbol: 'XRP',    supply: 57940000000,         fallbackPrice: 0.50      },
+  'solana':             { symbol: 'SOL',    supply: 474000000,           fallbackPrice: 170       },
+  'dogecoin':           { symbol: 'DOGE',   supply: 146000000000,        fallbackPrice: 0.15      },
+  'cardano':            { symbol: 'ADA',    supply: 36000000000,         fallbackPrice: 1.00      },
+  'tron':               { symbol: 'TRX',    supply: 87000000000,         fallbackPrice: 0.12      },
+  'shiba-inu':          { symbol: 'SHIB',   supply: 589283659253665,     fallbackPrice: 0.0000237 },
+  'stellar':            { symbol: 'XLM',    supply: 30000000000,         fallbackPrice: 0.20      },
+  'pepe':               { symbol: 'PEPE',   supply: 420690000000000,     fallbackPrice: 0.0000175 },
+  // ── New ───────────────────────────────────────────────────
+  'bnb':                { symbol: 'BNB',    supply: 145000000,           fallbackPrice: 600       },
+  'the-open-network':   { symbol: 'TON',    supply: 2500000000,          fallbackPrice: 5.50      },
+  'avalanche-2':        { symbol: 'AVAX',   supply: 410000000,           fallbackPrice: 28        },
+  'chainlink':          { symbol: 'LINK',   supply: 640000000,           fallbackPrice: 15        },
+  'bitcoin-cash':       { symbol: 'BCH',    supply: 19700000,            fallbackPrice: 350       },
+  'polkadot':           { symbol: 'DOT',    supply: 1470000000,          fallbackPrice: 6.50      },
+  'litecoin':           { symbol: 'LTC',    supply: 74800000,            fallbackPrice: 90        },
+  'near':               { symbol: 'NEAR',   supply: 1100000000,          fallbackPrice: 4.50      },
+  'sui':                { symbol: 'SUI',    supply: 2700000000,          fallbackPrice: 3.50      },
+  'aptos':              { symbol: 'APT',    supply: 520000000,           fallbackPrice: 8         },
+  'hedera-hashgraph':   { symbol: 'HBAR',   supply: 38700000000,         fallbackPrice: 0.10      },
+  'uniswap':            { symbol: 'UNI',    supply: 600000000,           fallbackPrice: 8.50      },
+  'internet-computer':  { symbol: 'ICP',    supply: 480000000,           fallbackPrice: 9         },
+  'ethereum-classic':   { symbol: 'ETC',    supply: 148000000,           fallbackPrice: 20        },
+  'aave':               { symbol: 'AAVE',   supply: 15000000,            fallbackPrice: 250       },
+  'vechain':            { symbol: 'VET',    supply: 72700000000,         fallbackPrice: 0.035     },
+  'filecoin':           { symbol: 'FIL',    supply: 575000000,           fallbackPrice: 4.50      },
+  'arbitrum':           { symbol: 'ARB',    supply: 12600000000,         fallbackPrice: 0.55      },
+  'optimism':           { symbol: 'OP',     supply: 4300000000,          fallbackPrice: 1.50      },
+  'injective-protocol': { symbol: 'INJ',    supply: 100000000,           fallbackPrice: 20        },
+  'maker':              { symbol: 'MKR',    supply: 880000,              fallbackPrice: 1600      },
+  'stacks':             { symbol: 'STX',    supply: 1900000000,          fallbackPrice: 1.20      },
+  'render-token':       { symbol: 'RENDER', supply: 380000000,           fallbackPrice: 5.50      },
+  'immutable-x':        { symbol: 'IMX',    supply: 1600000000,          fallbackPrice: 1.30      },
+  'the-graph':          { symbol: 'GRT',    supply: 9600000000,          fallbackPrice: 0.16      },
+  'algorand':           { symbol: 'ALGO',   supply: 8000000000,          fallbackPrice: 0.18      },
+  'cosmos':             { symbol: 'ATOM',   supply: 390000000,           fallbackPrice: 6.50      },
+  'fantom':             { symbol: 'FTM',    supply: 2800000000,          fallbackPrice: 0.70      },
+  'eos':                { symbol: 'EOS',    supply: 1100000000,          fallbackPrice: 0.70      },
+  'dogwifcoin':         { symbol: 'WIF',    supply: 998000000,           fallbackPrice: 1.50      },
+  'crypto-com-chain':   { symbol: 'CRO',    supply: 26300000000,         fallbackPrice: 0.10      },
+  'bittensor':          { symbol: 'TAO',    supply: 7300000,             fallbackPrice: 400       },
+  'sei-network':        { symbol: 'SEI',    supply: 5500000000,          fallbackPrice: 0.35      },
+  'theta-network':      { symbol: 'THETA',  supply: 1000000000,          fallbackPrice: 1.50      },
+  'the-sandbox':        { symbol: 'SAND',   supply: 2400000000,          fallbackPrice: 0.35      },
+  'gala':               { symbol: 'GALA',   supply: 34000000000,         fallbackPrice: 0.02      },
+  'floki':              { symbol: 'FLOKI',  supply: 9600000000000,       fallbackPrice: 0.00019   },
+  'bonk':               { symbol: 'BONK',   supply: 94000000000000,      fallbackPrice: 0.000018  },
+};
+
+// ══════════════════════════════════════════════════════════════
+//  ANCHORS
+// ══════════════════════════════════════════════════════════════
+const ANCHORS_DEF = [
+  { key: 'anc_eth',  value: 420e9,   logo: 'logos/ethereum.png' },
+  { key: 'anc_btc',  value: 1.9e12,  logo: 'logos/bitcoin.png'  },
+  { key: 'anc_tot',  value: 3.5e12,  icon: '🌐' },
+  { key: 'anc_gold', value: 14e12,   icon: '🥇' },
+  { key: 'anc_sp',   value: 45e12,   icon: '📈' },
+  { key: 'anc_stk',  value: 110e12,  icon: '🏦' },
+  { key: 'anc_gdp',  value: 105e12,  icon: '💼' },
+  { key: 'anc_wlth', value: 454e12,  icon: '🌍' },
+];
+
+// ══════════════════════════════════════════════════════════════
+//  VERDICTS
+// ══════════════════════════════════════════════════════════════
+// Ordered LOW → HIGH: return the first entry whose threshold is >= mcap
+const VERDICT_DEFS = [
+  { mcapThreshold: 420e9,    cls: 'vb-green',  stampCls: 'stamp-green',  keys: ['v_pla_title','v_pla_sub','v_pla_stamp'] },
+  { mcapThreshold: 1.9e12,   cls: 'vb-amber',  stampCls: 'stamp-amber',  keys: ['v_spe_title','v_spe_sub','v_spe_stamp'] },
+  { mcapThreshold: 3.5e12,   cls: 'vb-amber',  stampCls: 'stamp-amber',  keys: ['v_amb_title','v_amb_sub','v_amb_stamp'] },
+  { mcapThreshold: 14e12,    cls: 'vb-orange', stampCls: 'stamp-orange', keys: ['v_unl_title','v_unl_sub','v_unl_stamp'] },
+  { mcapThreshold: 110e12,   cls: 'vb-red',    stampCls: 'stamp-red',    keys: ['v_del_title','v_del_sub','v_del_stamp'] },
+  { mcapThreshold: 454e12,   cls: 'vb-red',    stampCls: 'stamp-red',    keys: ['v_math_title','v_math_sub','v_math_stamp'] },
+  { mcapThreshold: Infinity, cls: 'vb-purple', stampCls: 'stamp-purple', keys: ['v_cosmic_title','v_cosmic_sub','v_cosmic_stamp'] },
+];
+
+function getVerdict(mcap) {
+  for (const v of VERDICT_DEFS) {
+    if (mcap <= v.mcapThreshold) return v;
+  }
+  return VERDICT_DEFS[VERDICT_DEFS.length - 1];
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FORMATTERS
+// ══════════════════════════════════════════════════════════════
+function fmt(n) {
+  if (n >= 1e15) return '$' + (n/1e15).toFixed(2) + ' ' + t('mag_quadrillion');
+  if (n >= 1e12) return '$' + (n/1e12).toFixed(2) + ' ' + t('mag_trillion');
+  if (n >= 1e9)  return '$' + (n/1e9).toFixed(2)  + ' ' + t('mag_billion');
+  if (n >= 1e6)  return '$' + (n/1e6).toFixed(2)  + ' ' + t('mag_million');
+  return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+function fmtPrice(n) {
+  if (n >= 1000)      return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  if (n >= 1)         return '$' + n.toFixed(2);
+  if (n >= 0.0001)    return '$' + n.toFixed(6).replace(/0+$/, '').replace(/\.$/, '.00');
+  if (n >= 0.0000001) return '$' + n.toFixed(10).replace(/0+$/, '').replace(/\.$/, '');
+  return '$' + n.toExponential(4);
+}
+function fmtX(n) {
+  if (n >= 1e6)  return (n/1e6).toFixed(1)  + 'M×';
+  if (n >= 1000) return (n/1000).toFixed(1) + 'k×';
+  return n.toFixed(1) + '×';
+}
+function fmtSupply(n) {
+  if (n >= 1e12) return (n/1e12).toFixed(2) + ' ' + t('mag_trillion');
+  if (n >= 1e9)  return (n/1e9).toFixed(2)  + ' ' + t('mag_billion');
+  if (n >= 1e6)  return (n/1e6).toFixed(2)  + ' ' + t('mag_million');
+  return n.toLocaleString('en-US');
+}
+function fmtCoins(n) {
+  if (n >= 1e9)  return (n/1e9).toFixed(2)  + 'B';
+  if (n >= 1e6)  return (n/1e6).toFixed(2)  + 'M';
+  if (n >= 1000) return (n/1000).toFixed(2) + 'k';
+  return n.toLocaleString('en-US', {maximumFractionDigits: 4});
+}
+function fmtInvest(n) {
+  return n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+// Live input mask: adds thousand separators while preserving decimals and cursor position
+function maskNumber(el) {
+  const raw = el.value;
+  const pos = el.selectionStart;
+
+  // Count non-comma chars before cursor so we can restore position after reformatting
+  const charsBeforeCursor = raw.slice(0, pos).replace(/,/g, '').length;
+
+  // Strip commas, keep only digits and the first decimal point
+  const clean = raw.replace(/,/g, '').replace(/[^0-9.]/g, '');
+  const dotIdx = clean.indexOf('.');
+  const intPart = dotIdx >= 0 ? clean.slice(0, dotIdx) : clean;
+  const decPart = dotIdx >= 0 ? clean.slice(dotIdx) : ''; // includes the '.'
+
+  const formatted = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + decPart;
+  el.value = formatted;
+
+  // Restore cursor: walk formatted string counting non-comma chars until we reach original count
+  let seen = 0, newPos = formatted.length;
+  for (let i = 0; i < formatted.length; i++) {
+    if (seen >= charsBeforeCursor) { newPos = i; break; }
+    if (formatted[i] !== ',') seen++;
+  }
+  el.setSelectionRange(newPos, newPos);
+}
+// Piecewise log scale: 7 zones matching all 7 VERDICT_DEFS thresholds exactly
+// Zone boundaries align with: Plausible|Speculative|Ambitious|Unlikely|Delusional|Impossible|Cosmic
+function scalePos(mcap) {
+  const zones = [
+    { lo: 1e8,    hi: 420e9,   posLo: 2,  posHi: 14 },  // Plausible
+    { lo: 420e9,  hi: 1.9e12,  posLo: 14, posHi: 26 },  // Speculative
+    { lo: 1.9e12, hi: 3.5e12,  posLo: 26, posHi: 38 },  // Ambitious
+    { lo: 3.5e12, hi: 14e12,   posLo: 38, posHi: 54 },  // Unlikely
+    { lo: 14e12,  hi: 110e12,  posLo: 54, posHi: 68 },  // Delusional
+    { lo: 110e12, hi: 454e12,  posLo: 68, posHi: 82 },  // Impossible
+    { lo: 454e12, hi: 5e15,    posLo: 82, posHi: 97 },  // Cosmic
+  ];
+  const clamped = Math.max(1e8, Math.min(mcap, 5e15));
+  for (const z of zones) {
+    if (clamped <= z.hi) {
+      const t = (Math.log10(clamped) - Math.log10(z.lo)) / (Math.log10(z.hi) - Math.log10(z.lo));
+      return z.posLo + Math.max(0, Math.min(1, t)) * (z.posHi - z.posLo);
+    }
+  }
+  return 96;
+}
+function randCase() { return 'CH-' + Math.floor(10000 + Math.random() * 89999); }
+
+// ══════════════════════════════════════════════════════════════
+//  MARKET DATA  — Binance API
+// ══════════════════════════════════════════════════════════════
+// Binance USDT pairs for each coin
+const BINANCE_SYMBOLS = {
+  'bitcoin':            'BTCUSDT',
+  'ethereum':           'ETHUSDT',
+  'ripple':             'XRPUSDT',
+  'solana':             'SOLUSDT',
+  'dogecoin':           'DOGEUSDT',
+  'cardano':            'ADAUSDT',
+  'tron':               'TRXUSDT',
+  'shiba-inu':          'SHIBUSDT',
+  'stellar':            'XLMUSDT',
+  'pepe':               'PEPEUSDT',
+  'bnb':                'BNBUSDT',
+  'the-open-network':   'TONUSDT',
+  'avalanche-2':        'AVAXUSDT',
+  'chainlink':          'LINKUSDT',
+  'bitcoin-cash':       'BCHUSDT',
+  'polkadot':           'DOTUSDT',
+  'litecoin':           'LTCUSDT',
+  'near':               'NEARUSDT',
+  'sui':                'SUIUSDT',
+  'aptos':              'APTUSDT',
+  'hedera-hashgraph':   'HBARUSDT',
+  'uniswap':            'UNIUSDT',
+  'internet-computer':  'ICPUSDT',
+  'ethereum-classic':   'ETCUSDT',
+  'aave':               'AAVEUSDT',
+  'vechain':            'VETUSDT',
+  'filecoin':           'FILUSDT',
+  'arbitrum':           'ARBUSDT',
+  'optimism':           'OPUSDT',
+  'injective-protocol': 'INJUSDT',
+  'maker':              'MKRUSDT',
+  'stacks':             'STXUSDT',
+  'render-token':       'RENDERUSDT',
+  'immutable-x':        'IMXUSDT',
+  'the-graph':          'GRTUSDT',
+  'algorand':           'ALGOUSDT',
+  'cosmos':             'ATOMUSDT',
+  'fantom':             'FTMUSDT',
+  'eos':                'EOSUSDT',
+  'dogwifcoin':         'WIFUSDT',
+  'crypto-com-chain':   'CROUSDT',
+  'bittensor':          'TAOUSDT',
+  'sei-network':        'SEIUSDT',
+  'theta-network':      'THETAUSDT',
+  'the-sandbox':        'SANDUSDT',
+  'gala':               'GALAUSDT',
+  'floki':              '1000FLOKIUSDT',
+  'bonk':               '1000BONKUSDT',
+};
+
+// Cache of fetched live data per coin (persists for the session)
+let liveData = {};
+
+const KILO_PAIRS = new Set(['1000FLOKIUSDT', '1000BONKUSDT', '1000PEPEUSDT', '1000SHIBUSDT']);
+
+// Fetch a single coin's live data from Binance — called only when a coin is selected
+async function fetchCoinData(coinId) {
+  const binanceSymbol = BINANCE_SYMBOLS[coinId];
+  if (!binanceSymbol) return;
+
+  setBadge('loading', t('live_loading'));
+  try {
+    const url = `https://api.binance.com/api/v3/ticker/24hr?symbol=${encodeURIComponent(binanceSymbol)}`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const item = await res.json();
+
+    const multiplier = KILO_PAIRS.has(binanceSymbol) ? 0.001 : 1;
+    liveData[coinId] = {
+      price:    parseFloat(item.lastPrice) * multiplier,
+      supply:   COINS[coinId].supply,
+      change24: parseFloat(item.priceChangePercent),
+    };
+
+    // Only update UI if this coin is still selected
+    if (document.getElementById('coinPreset').value === coinId) {
+      const priceEl = document.getElementById('currentPrice');
+      priceEl.value = liveData[coinId].price;
+      maskNumber(priceEl);
+      setBadge('ok', 'Binance — ' + t('live_ok'));
+      updateCoinDisplay();
+    }
+  } catch (e) {
+    setBadge('error', t('live_error'));
+  }
+}
+
+function setBadge(cls, text) {
+  const badge = document.getElementById('liveBadge');
+  badge.className = 'live-badge ' + cls;
+  document.getElementById('liveBadgeText').textContent = text;
+}
+
+function updateCoinDisplay() {
+  const sel = document.getElementById('coinPreset').value;
+  const priceEl  = document.getElementById('coinPriceTag');
+  const changeEl = document.getElementById('coinChangeTag');
+  if (!sel || !liveData[sel]) {
+    priceEl.textContent  = '';
+    changeEl.textContent = '';
+    return;
+  }
+  const d = liveData[sel];
+  priceEl.textContent = fmtPrice(d.price);
+  const ch = d.change24;
+  changeEl.textContent = (ch >= 0 ? '▲ +' : '▼ ') + ch.toFixed(2) + '% (24h)';
+  changeEl.className = 'coin-change ' + (ch >= 0 ? 'pos' : 'neg');
+}
+
+// ── Apply preset with live data ───────────────────────────────
+function applyPreset() {
+  const coinId = document.getElementById('coinPreset').value;
+  if (!coinId) {
+    document.getElementById('coinPriceTag').textContent  = '';
+    document.getElementById('coinChangeTag').textContent = '';
+    setBadge('loading', '');
+    document.getElementById('liveBadge').style.visibility = 'hidden';
+    return;
+  }
+  document.getElementById('liveBadge').style.visibility = '';
+  const coin = COINS[coinId];
+
+  // Fill supply and price immediately (use cache if available, else fallback)
+  const cached = liveData[coinId];
+  const supplyEl = document.getElementById('supply');
+  supplyEl.value = (cached ? cached.supply : coin.supply)
+    .toLocaleString('en-US', {maximumFractionDigits: 0});
+  const priceEl = document.getElementById('currentPrice');
+  priceEl.value = cached ? cached.price : coin.fallbackPrice;
+  maskNumber(priceEl);
+  updateCoinDisplay();
+
+  // Fetch fresh data from Binance for the selected coin
+  fetchCoinData(coinId);
+}
+
+function setInvest(v) { const el = document.getElementById('investment'); el.value = v; maskNumber(el); }
+function setGoal(v)   {
+  const el = document.getElementById('richGoal');
+  el.value = v;
+  fmtFieldComma(el);
+}
+
+// ── Case number ───────────────────────────────────────────────
+const SESSION_CASE = randCase();
+document.getElementById('caseNum').textContent = 'CASE #' + SESSION_CASE;
+
+// Signature date
+(function stampDate() {
+  const now = new Date();
+  const day = now.getDate();
+  const suffix = (d => {
+    if (d >= 11 && d <= 13) return 'th';
+    return ['th','st','nd','rd','th','th','th','th','th','th'][d % 10];
+  })(day);
+  const months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  const pad = n => String(n).padStart(2, '0');
+  const dateStr = `${pad(day)}${suffix} ${months[now.getMonth()]}, ${now.getFullYear()}`;
+  const el = document.getElementById('sigDate');
+  if (el) el.textContent = dateStr;
+  const sector = document.getElementById('sigSector');
+  if (sector) sector.textContent = 'CH-' + now.getFullYear();
+})();
+
+// Live data is fetched on demand when a coin is selected (see applyPreset → fetchCoinData)
+
+// ══════════════════════════════════════════════════════════════
+//  CALCULATE
+// ══════════════════════════════════════════════════════════════
+function calculate() {
+  const stripMask = id => parseFloat(document.getElementById(id).value.replace(/,/g, ''));
+  const supply   = stripMask('supply');
+  const currentP = stripMask('currentPrice');
+  const targetP  = stripMask('targetPrice');
+  const invest   = stripMask('investment') || 100;
+  const richGoal = stripMask('richGoal')   || 1e6;
+  const years    = parseFloat(document.getElementById('years').value);
+
+  if (!supply || !targetP) {
+    alert(LANG === 'pt'
+      ? 'Por favor, preencha ao menos o Fornecimento Circulante e o Preço Alvo.'
+      : 'Please fill in at least Circulating Supply and Predicted Price.');
+    return;
+  }
+
+  const projMcap    = supply * targetP;
+  const multiplier  = (currentP > 0) ? targetP / currentP : null;
+  const coinsOwned  = (currentP > 0) ? invest / currentP  : null;
+  const returnValue = coinsOwned ? coinsOwned * targetP : null;
+  const returnMult  = returnValue ? returnValue / invest  : null;
+
+  // ── Verdict ─────────────────────────────────────────────
+  const vd = getVerdict(projMcap);
+  const vBody = document.getElementById('verdictBody');
+  vBody.className = 'verdict-body ' + vd.cls;
+  document.getElementById('verdictTitle').textContent = t(vd.keys[0]);
+  document.getElementById('verdictSub').textContent   = t(vd.keys[1]);
+  document.getElementById('vCaseNum').textContent     = SESSION_CASE;
+
+  const stamp = document.getElementById('verdictStamp');
+  stamp.className = 'stamp ' + vd.stampCls;
+  stamp.textContent = t(vd.keys[2]);
+  void stamp.offsetWidth;
+  stamp.classList.add('show');
+
+  // Price summary
+  const priceSummary = currentP > 0
+    ? `${t('supply_lbl')}: ${fmtSupply(supply)} · ${t('current_lbl')}: ${fmtPrice(currentP)} → ${fmtPrice(targetP)}`
+    : `${t('supply_lbl')}: ${fmtSupply(supply)} · ${t('target_lbl')}: ${fmtPrice(targetP)}`;
+  document.getElementById('vPriceSummary').textContent = priceSummary;
+
+  // ── Exhibits ─────────────────────────────────────────────
+  document.getElementById('eMarketCap').textContent = fmt(projMcap);
+  const nearest = ANCHORS_DEF.slice().sort((a,b) =>
+    Math.abs(a.value - projMcap) - Math.abs(b.value - projMcap))[0];
+  const ratio = projMcap / nearest.value;
+  document.getElementById('eMarketCapCmp').textContent = ratio >= 1
+    ? tpl('mcap_bigger',  { r: ratio.toFixed(1),       name: t(nearest.key) })
+    : tpl('mcap_smaller', { r: (1/ratio).toFixed(1),   name: t(nearest.key) });
+
+  document.getElementById('eMultiplier').textContent = multiplier !== null ? fmtX(multiplier) : '—';
+
+  if (returnValue !== null) {
+    document.getElementById('eReturn').textContent    = fmt(returnValue);
+    document.getElementById('eReturnCmp').textContent = returnMult >= 1
+      ? tpl('return_gain', { x: fmtX(returnMult), inv: fmt(invest) })
+      : tpl('return_loss', { pct: ((1-returnMult)*100).toFixed(1) });
+  } else {
+    document.getElementById('eReturn').textContent    = '—';
+    document.getElementById('eReturnCmp').textContent = t('enter_price');
+  }
+
+  if (coinsOwned !== null) {
+    document.getElementById('eCoins').textContent = fmtCoins(coinsOwned);
+    const pct = (coinsOwned / supply) * 100;
+    document.getElementById('eCoinsCmp').textContent = pct < 0.0001
+      ? '< 0.0001' + t('of_supply')
+      : pct.toFixed(6) + t('of_supply');
+  } else {
+    document.getElementById('eCoins').textContent    = '—';
+    document.getElementById('eCoinsCmp').textContent = t('enter_price');
+  }
+
+  // ── Threat needle ────────────────────────────────────────
+  const pos = scalePos(projMcap);
+  document.getElementById('threatNeedle').style.left = pos + '%';
+  const levels = t('threat_levels');
+  const li = Math.min(levels.length - 1, Math.floor(pos / 20));
+  document.getElementById('threatReading').textContent = levels[li] + ' — ' + pos.toFixed(0) + '/100';
+
+  // ── Evidence rows ────────────────────────────────────────
+  let eHtml = '';
+  ANCHORS_DEF.forEach(a => {
+    const above = projMcap > a.value;
+    const r = above ? projMcap / a.value : a.value / projMcap;
+    const badgeTpl = above ? 'ev_above' : 'ev_below';
+    const iconHtml = a.logo
+      ? `<img src="${a.logo}" alt="" class="ev-logo" />`
+      : `<span class="ev-icon">${a.icon}</span>`;
+    eHtml += `
+      <div class="evidence-row">
+        ${iconHtml}
+        <span class="ev-name">${t(a.key)}</span>
+        <span class="ev-val">${fmt(a.value)}</span>
+        <span class="ev-badge ${above ? 'ev-above' : 'ev-below'}">
+          ${tpl(badgeTpl, { r: r.toFixed(1) })}
+        </span>
+      </div>`;
+  });
+  document.getElementById('evidenceRows').innerHTML = eHtml;
+
+  // ── Case Notes ───────────────────────────────────────────
+  let notesHtml = '';
+  if (!isNaN(years) && years > 0 && currentP > 0) {
+    const cagr        = multiplier ? (Math.pow(multiplier, 1/years) - 1) * 100 : null;
+    const indexReturn = invest * Math.pow(1.10, years);
+    const reachRich   = returnValue && returnValue >= richGoal;
+    const spYears     = (returnMult && returnMult > 1) ? Math.log(returnMult) / Math.log(1.10) : null;
+    const yrLabel     = years === 1 ? t('yr_singular') : t('yr_plural');
+
+    notesHtml = `<div class="case-notes" style="margin-bottom:28px">
+      <div class="case-notes-header">${t('notes_header')}</div>`;
+
+    if (cagr !== null) {
+      notesHtml += `<div class="case-row">
+        <span class="case-key">${tpl('cagr_row', { y: years })}</span>
+        <span class="case-val ${cagr > 300 ? 'flag-red' : 'flag-green'}">${tpl('cagr_val', { c: cagr.toFixed(1) })}</span>
+      </div>`;
+    }
+
+    notesHtml += `<div class="case-row">
+      <span class="case-key">${t('tf_row')}</span>
+      <span class="case-val">${years} ${yrLabel}</span>
+    </div>
+    <div class="case-row">
+      <span class="case-key">${tpl('rich_row', { inv: fmtInvest(invest), goal: fmt(richGoal) })}</span>
+      <span class="case-val ${reachRich ? 'flag-green' : 'flag-red'}">${
+        reachRich
+          ? t('rich_yes')
+          : tpl('rich_no', { val: fmt(returnValue || 0) })
+      }</span>
+    </div>`;
+
+    if (spYears !== null) {
+      notesHtml += `<div class="case-row">
+        <span class="case-key">${t('sp500_row')}</span>
+        <span class="case-val flag-amber">${tpl('sp500_val', { y: spYears.toFixed(1) })}</span>
+      </div>`;
+    }
+
+    notesHtml += `<div class="case-row">
+      <span class="case-key">${tpl('index_row', { inv: fmtInvest(invest), y: years })}</span>
+      <span class="case-val">${fmt(indexReturn)}</span>
+    </div></div>`;
+  }
+  document.getElementById('caseNotesWrap').innerHTML = notesHtml;
+
+  // ── Warning (opportunity cost) ───────────────────────────
+  let warnHtml = '';
+  if (returnMult && returnMult > 1) {
+    const yrs  = Math.log(returnMult) / Math.log(1.10);
+    if (yrs > 30) {
+      const futV = Math.round(1e6 / Math.pow(1.025, yrs));
+      const p2   = yrs > 80 ? t('warn_p2_long') : t('warn_p2_short');
+      warnHtml = `<div class="warning-box">
+        <p>
+          ${tpl('warn_p1', { y: yrs.toFixed(0) })} ${p2}
+          <br><br>
+          ${tpl('warn_inflation', { y: Math.round(yrs), v: futV.toLocaleString() })}
+        </p>
+      </div>`;
+      // inject the ::before content via inline style trick
+      warnHtml = warnHtml.replace(
+        'class="warning-box"',
+        `class="warning-box" style="--warn-label:'${t('warn_label')}'"`
+      );
+    }
+  }
+  document.getElementById('warningWrap').innerHTML = warnHtml;
+  // Apply ::before content for warning label
+  document.querySelectorAll('.warning-box').forEach(el => {
+    const lbl = el.style.getPropertyValue('--warn-label').replace(/'/g,'');
+    if (lbl) {
+      el.setAttribute('data-warn-label', lbl);
+      // Override with a real element for cross-browser safety
+      if (!el.querySelector('.warn-label-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'warn-label-badge';
+        badge.textContent = lbl;
+        badge.style.cssText = `
+          position:absolute; top:-11px; left:16px;
+          background:var(--paper); padding:0 8px;
+          font-family:var(--ff-condensed); font-weight:700;
+          font-size:0.82rem; letter-spacing:3px; color:var(--red);
+          text-transform:uppercase;
+        `;
+        el.style.position = 'relative';
+        el.prepend(badge);
+      }
+    }
+  });
+
+  // ── Show ─────────────────────────────────────────────────
+  const res = document.getElementById('result');
+  res.style.display = 'block';
+  setTimeout(() => res.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
+}
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     UNIT TESTS  — run via console: runTests()
+══════════════════════════════════════════════════════════════ -->
+<script>
+function runTests() {
+  let passed = 0, failed = 0;
+  const results = [];
+
+  function assert(label, condition, got) {
+    if (condition) {
+      passed++;
+      results.push(`  ✓ ${label}`);
+    } else {
+      failed++;
+      results.push(`  ✗ ${label}${got !== undefined ? ' — got: ' + JSON.stringify(got) : ''}`);
+    }
+  }
+
+  // ── getVerdict ────────────────────────────────────────────
+  results.push('\ngetVerdict:');
+  assert('≤ 420B → Plausible',         getVerdict(100e9).keys[0]   === 'v_pla_title');
+  assert('= 420B → Plausible',         getVerdict(420e9).keys[0]   === 'v_pla_title');
+  assert('421B → Speculative',         getVerdict(421e9).keys[0]   === 'v_spe_title');
+  assert('1.9T → Speculative',         getVerdict(1.9e12).keys[0]  === 'v_spe_title');
+  assert('2T → Ambitious',             getVerdict(2e12).keys[0]    === 'v_amb_title');
+  assert('3.5T → Ambitious',           getVerdict(3.5e12).keys[0]  === 'v_amb_title');
+  assert('4T → Unlikely',              getVerdict(4e12).keys[0]    === 'v_unl_title');
+  assert('14T → Unlikely',             getVerdict(14e12).keys[0]   === 'v_unl_title');
+  assert('15T → Delusional',           getVerdict(15e12).keys[0]   === 'v_del_title');
+  assert('110T → Delusional',          getVerdict(110e12).keys[0]  === 'v_del_title');
+  assert('111T → Math Impossible',     getVerdict(111e12).keys[0]  === 'v_math_title');
+  assert('454T → Math Impossible',     getVerdict(454e12).keys[0]  === 'v_math_title');
+  assert('455T → Cosmic Delusion',     getVerdict(455e12).keys[0]  === 'v_cosmic_title');
+  assert('Infinity → Cosmic Delusion', getVerdict(1e18).keys[0]    === 'v_cosmic_title');
+
+  // ── scalePos ──────────────────────────────────────────────
+  results.push('\nscalePos:');
+  assert('100B in zone 1 [2,14]',  scalePos(100e9)  >= 2  && scalePos(100e9)  <= 14,  scalePos(100e9).toFixed(1));
+  assert('1T in zone 2 [14,26]',   scalePos(1e12)   >= 14 && scalePos(1e12)   <= 26,  scalePos(1e12).toFixed(1));
+  assert('2.5T in zone 3 [26,38]', scalePos(2.5e12) >= 26 && scalePos(2.5e12) <= 38,  scalePos(2.5e12).toFixed(1));
+  assert('8T in zone 4 [38,54]',   scalePos(8e12)   >= 38 && scalePos(8e12)   <= 54,  scalePos(8e12).toFixed(1));
+  assert('50T in zone 5 [54,68]',  scalePos(50e12)  >= 54 && scalePos(50e12)  <= 68,  scalePos(50e12).toFixed(1));
+  assert('200T in zone 6 [68,82]', scalePos(200e12) >= 68 && scalePos(200e12) <= 82,  scalePos(200e12).toFixed(1));
+  assert('1000T in zone 7 [82,97]',scalePos(1000e12)>= 82 && scalePos(1000e12)<= 97, scalePos(1000e12).toFixed(1));
+  assert('verdict/bar aligned: 5T verdict=Unlikely zone=4',
+    getVerdict(5e12).keys[0] === 'v_unl_title' && scalePos(5e12) >= 38 && scalePos(5e12) <= 54);
+
+  // ── fmt ───────────────────────────────────────────────────
+  results.push('\nfmt:');
+  assert('fmt 1B → $1.00 Billion',  fmt(1e9).includes('1.00'));
+  assert('fmt 2.5T → $2.50 Trillion', fmt(2.5e12).includes('2.50'));
+  assert('fmt 100 → $100.00',       fmt(100) === '$100.00');
+
+  // ── fmtPrice ──────────────────────────────────────────────
+  results.push('\nfmtPrice:');
+  assert('fmtPrice 85000 → $85,000.00', fmtPrice(85000) === '$85,000.00');
+  assert('fmtPrice 3.50 → $3.50',       fmtPrice(3.50)  === '$3.50');
+  assert('fmtPrice 0.0000175 → 6 dec',  fmtPrice(0.0000175).startsWith('$'));
+
+  // ── fmtSupply ─────────────────────────────────────────────
+  results.push('\nfmtSupply:');
+  assert('fmtSupply 19.8M → million',  fmtSupply(19800000).includes('19.80'));
+  assert('fmtSupply 474M → million',   fmtSupply(474000000).includes('474.00'));
+  assert('fmtSupply 2.5B → billion',   fmtSupply(2.5e9).includes('2.50'));
+  assert('fmtSupply 1.47T → trillion', fmtSupply(1.47e12).includes('1.47'));
+
+  // ── maskNumber ────────────────────────────────────────────
+  results.push('\nmaskNumber:');
+  const el = { value: '57940000000', selectionStart: 11, setSelectionRange() {} };
+  maskNumber(el);
+  assert('maskNumber 57940000000 → 57,940,000,000', el.value === '57,940,000,000', el.value);
+  const el2 = { value: '85000.23', selectionStart: 8, setSelectionRange() {} };
+  maskNumber(el2);
+  assert('maskNumber 85000.23 → 85,000.23', el2.value === '85,000.23', el2.value);
+  const el3 = { value: '0.0000175', selectionStart: 9, setSelectionRange() {} };
+  maskNumber(el3);
+  assert('maskNumber 0.0000175 → unchanged (no int sep needed)', el3.value === '0.0000175', el3.value);
+
+  // ── COINS coverage ────────────────────────────────────────
+  results.push('\nCOINS:');
+  assert('all BINANCE_SYMBOLS keys exist in COINS',
+    Object.keys(BINANCE_SYMBOLS).every(id => COINS[id] !== undefined));
+  assert('all COINS have supply > 0',
+    Object.values(COINS).every(c => c.supply > 0));
+  assert('all COINS have fallbackPrice > 0',
+    Object.values(COINS).every(c => c.fallbackPrice > 0));
+
+  // ── Summary ───────────────────────────────────────────────
+  results.push('\n(API tests run separately — call runApiTests())');
+  const summary = `\n━━━ ${passed} passed, ${failed} failed ━━━`;
+  const output = ['[Crypto Hopium Tests]', ...results, summary].join('\n');
+  console.log(output);
+  if (failed > 0) console.warn(`${failed} test(s) failed — see above`);
+  return { passed, failed };
+}
+
+// Tests each coin's Binance symbol by hitting the API sequentially with a delay.
+// Usage: runApiTests()           — 300 ms between requests (default)
+//        runApiTests(500)        — 500 ms between requests
+async function runApiTests(delayMs = 300) {
+  const entries = Object.entries(BINANCE_SYMBOLS);
+  const total   = entries.length;
+  const rows    = [];
+  console.log(`[Crypto Hopium — API Tests] Checking ${total} Binance pairs with ${delayMs} ms pause between requests…`);
+
+  for (let i = 0; i < entries.length; i++) {
+    const [coinId, symbol] = entries[i];
+    const t0 = Date.now();
+    let row;
+    try {
+      const url = `https://api.binance.com/api/v3/ticker/price?symbol=${encodeURIComponent(symbol)}`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      const ms  = Date.now() - t0;
+      if (!res.ok) {
+        row = { coinId, symbol, status: 'FAIL', price: null, ms, error: `HTTP ${res.status}` };
+      } else {
+        const data       = await res.json();
+        const multiplier = KILO_PAIRS.has(symbol) ? 0.001 : 1;
+        const price      = parseFloat(data.price) * multiplier;
+        row = { coinId, symbol, status: 'OK', price, ms, error: null };
+      }
+    } catch (e) {
+      row = { coinId, symbol, status: 'FAIL', price: null, ms: Date.now() - t0, error: e.message };
+    }
+
+    rows.push(row);
+    const icon = row.status === 'OK' ? '✓' : '✗';
+    console.log(`  [${i + 1}/${total}] ${icon} ${coinId} (${symbol})${row.error ? ' — ' + row.error : ' — ' + row.price?.toPrecision(4)}`);
+
+    if (i < entries.length - 1) await new Promise(r => setTimeout(r, delayMs));
+  }
+
+  const ok   = rows.filter(r => r.status === 'OK').length;
+  const fail = rows.filter(r => r.status === 'FAIL').length;
+  console.log(`\n[Crypto Hopium — API Tests] Done — ${ok} OK, ${fail} FAIL`);
+  if (fail > 0) rows.filter(r => r.status === 'FAIL').forEach(r =>
+    console.warn(`  ✗ ${r.coinId} (${r.symbol}) — ${r.error}`)
+  );
+  console.table(rows.map(r => ({
+    coin: r.coinId, symbol: r.symbol, status: r.status,
+    price: r.price ? r.price.toPrecision(4) : '—', ms: r.ms
+  })));
+  return rows;
+}
+</script>
+</body>
+</html>
