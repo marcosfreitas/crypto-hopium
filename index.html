@@ -184,6 +184,14 @@
       color: var(--ink);
     }
     .main-title h1 em { color: var(--red); font-style: normal; }
+    .main-title h1 span {
+      display: block;
+      font-size: clamp(1rem, 2.6vw, 1.55rem);
+      letter-spacing: 5px;
+      line-height: 1.2;
+      color: var(--ink-light);
+      margin-top: 12px;
+    }
     .main-title .tagline {
       font-family: var(--ff-mono);
       font-size: 0.88rem;
@@ -701,7 +709,7 @@
   <!-- ── Title ─────────────────────────────────────────── -->
   <div class="main-title">
     <div class="eyebrow" data-i18n="eyebrow">Financial Fraud Forensics</div>
-    <h1>CRYPTO <em>HOPIUM</em><br><span data-i18n="title_sub">REALITY CHECK</span></h1>
+    <h1>CRYPTO <em>HOPIUM</em><span data-i18n="title_sub">REALITY CHECK</span></h1>
     <div class="tagline" data-i18n="tagline">// Projected Market Cap · Return Analysis · Delusion Scale //</div>
   </div>
 
