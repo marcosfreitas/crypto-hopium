@@ -479,7 +479,7 @@
         position: static;
         transform: rotate(-12deg);
         display: table; /* shrink-wraps to content width */
-        margin: 20px auto 4px;
+        margin: 30px auto 28px;
       }
       .stamp.show { animation: stamp-thud-mobile 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards; }
     }
@@ -490,6 +490,10 @@
       85%  { transform:rotate(-12deg) scale(0.97); }
       100% { opacity:1; transform:rotate(-12deg) scale(1); }
     }
+    @media (max-width: 520px) {
+      .stamp { font-size: 1.5rem; letter-spacing: 2px; border-width: 4px; margin: 24px auto 22px; }
+    }
+
     .stamp-green  { color: var(--green);  border-color: var(--green);  background: rgba(26,92,46,0.06); }
     .stamp-amber  { color: var(--amber);  border-color: var(--amber);  background: rgba(146,64,14,0.06); }
     .stamp-orange { color: var(--orange); border-color: var(--orange); background: rgba(194,65,12,0.06); }
@@ -524,7 +528,14 @@
        per step, real anchors marked on it, the claim dropped on in red. */
     .ruler-section { margin-bottom: 28px; }
     .ruler-head { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
-    .ruler-title   { font-family: var(--ff-condensed); font-weight: 600; font-size: 0.85rem; letter-spacing: 2.4px; text-transform: uppercase; color: var(--ink-light); }
+    /* Same treatment as .section-label so the ruler reads as a peer of
+       Exhibits rather than a subsection of it. */
+    .ruler-title   {
+      display: flex; align-items: center; gap: 10px; flex: 1;
+      font-family: var(--ff-condensed); font-weight: 600; font-size: 0.82rem;
+      letter-spacing: 3.5px; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .ruler-title::after { content: ''; flex: 1; height: 1px; background: var(--line); }
     .ruler-reading { font-family: var(--ff-mono); font-size: 0.8rem; color: var(--ink-faint); }
     .ruler-wrap { border: 1.5px solid var(--line); background: var(--paper); padding: 16px 16px 12px; }
     .ruler-cap { font-family: var(--ff-mono); font-size: 0.72rem; letter-spacing: 1.4px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 18px; }
@@ -574,31 +585,50 @@
     .ruler-claim[data-edge="l"] u { transform: translateX(-6px); }
     .ruler-claim[data-edge="r"] u { transform: translateX(calc(-100% + 6px)); }
 
-    /* Seven anchor labels never fit across a phone, so the axis rotates. */
-    @media (max-width: 700px) {
-      .ruler { height: 436px; }
-      .ruler-axis { left: 108px; right: auto; top: 0; bottom: 0; height: auto; width: 2px; }
-      .ruler-decade { top: var(--p); left: 108px; transform: translateY(-50%); display: flex; align-items: center; gap: 5px; }
+    /* Seven anchor labels laid across the axis need about 900px before they
+       stop colliding: the reference names are longer in Portuguese ("Todas as
+       ações", "Riqueza humana"), and "All gold" and "All stocks" sit only one
+       decade apart. Below that the axis rotates and the labels stack. */
+    @media (max-width: 900px) {
+      /* The rotated axis needs a fraction of a tablet's width, so cap it and
+         centre it instead of leaving half the card empty. */
+      .ruler { height: 436px; max-width: 470px; margin: 0 auto; }
+      .ruler-axis { left: 148px; right: auto; top: 0; bottom: 0; height: auto; width: 2px; }
+      .ruler-decade { top: var(--p); left: 148px; transform: translateY(-50%); display: flex; align-items: center; gap: 5px; }
       .ruler-decade i { width: 7px; height: 1px; margin: 0; }
       .ruler-decade b { margin: 0; font-size: 0.64rem; background: none; padding: 0; }
       .ruler-anchor { left: 0; right: 0; top: var(--p); width: auto; transform: translateY(-50%); }
       .ruler-anchor i { display: none; }
       .ruler-anchor.up u, .ruler-anchor.down u {
         position: static; transform: none; top: auto; text-align: right;
-        width: 100px; padding: 0; background: none; display: block;
+        width: 140px; padding: 0; background: none; display: block;
       }
       .ruler-anchor u b { display: inline; font-size: 0.72rem; margin-left: 6px; }
       .ruler-claim-line { display: none; }
       .ruler-claim { left: 0; right: 0; top: var(--p); transform: translateY(-50%); }
       .ruler-claim i { display: none; }
       /* Decade labels also live to the right of the axis, so the claim chip
-         has to clear them: axis 108 + tick 7 + the widest decade label. */
+         has to clear them: axis 148 + tick 7 + the widest decade label. */
       /* <u> is inline, so width:fit-content is inert on it and the block-level
          <s> inside stretched its box to the full container. */
       .ruler-claim u, .ruler-claim[data-edge] u {
         position: static; transform: none; display: inline-block;
-        margin-left: 168px; width: fit-content;
+        margin-left: 210px; width: fit-content;
       }
+    }
+
+    /* Below 480px the widened label column, the decade labels and the claim
+       chip stop fitting side by side. Everything shrinks one step and the
+       chip drops its caption: it is the only red mark on the ruler, and the
+       reading line right above the chart already names where the claim sits. */
+    @media (max-width: 480px) {
+      .ruler-anchor.up u, .ruler-anchor.down u { width: 124px; font-size: 0.63rem; }
+      .ruler-anchor u b { font-size: 0.65rem; margin-left: 4px; }
+      .ruler-axis   { left: 132px; }
+      .ruler-decade { left: 132px; }
+      .ruler-decade b { font-size: 0.6rem; }
+      .ruler-claim u s { display: none; }
+      .ruler-claim u, .ruler-claim[data-edge] u { margin-left: 190px; font-size: 0.8rem; }
     }
 
     /* Verdict ladder — the 0-100 score, as steps rather than a needle.
@@ -630,7 +660,10 @@
 
     /* ── Evidence File ───────────────────────────────────── */
     .evidence-file { border: 1.5px solid var(--line); margin-bottom: 28px; }
-    .evidence-file-header { background: var(--ink); color: var(--paper); font-family: var(--ff-condensed); font-weight: 600; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; padding: 9px 16px; display: flex; justify-content: space-between; }
+    .evidence-file-header { background: var(--ink); color: var(--paper); font-family: var(--ff-condensed); font-weight: 600; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; padding: 9px 16px; display: flex; justify-content: space-between; gap: 12px; }
+    @media (max-width: 520px) {
+      .evidence-file-header { flex-direction: column; gap: 2px; letter-spacing: 2px; }
+    }
     .evidence-row { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid var(--line); font-size: 0.9rem; }
     .evidence-row:last-child { border-bottom: none; }
     .ev-icon  { width: 22px; text-align: center; font-size: 1rem; flex-shrink: 0; }
@@ -675,7 +708,12 @@
     .page-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center; }
     .page-footer p { font-family: var(--ff-mono); font-size: 0.78rem; color: var(--ink-faint); line-height: 1.8; letter-spacing: 0.5px; }
 
-    .sig-line { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .sig-line { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); }
+    /* 3 x 140px + 2 x 16px gap = 452px, so below that the row stacks. */
+    @media (max-width: 520px) {
+      .sig-line  { flex-direction: column; align-items: center; gap: 26px; }
+      .sig-block { width: 100%; }
+    }
     .sig-block { display: flex; flex-direction: column; align-items: center; min-width: 140px; flex: 1; justify-content: flex-end; }
     .sig-block svg { display: block; margin-bottom: 2px; overflow: visible; }
     .sig-block .sig-label { font-family: var(--ff-mono); font-size: 0.72rem; color: var(--ink-faint); border-top: 1px solid var(--ink-faint); padding-top: 4px; width: 100%; text-align: center; margin-top: 4px; }
@@ -1218,7 +1256,7 @@ const T = {
     ev_above:        '↑ {r}× ACIMA',
     ev_below:        '↓ {r}× ABAIXO',
     sig_1: 'Autorizador', sig_2: 'Data da Análise', sig_3: 'Setor Autorizador',
-    footer_text:     'Dados de fornecimento e preço obtidos da API CoinCap. Apenas para fins educativos. Não é conselho financeiro. Desempenho passado não indica resultados futuros.',
+    footer_text:     'Dados de preço obtidos da API da Binance. Apenas para fins educativos. Não é conselho financeiro. Desempenho passado não indica resultados futuros.',
     live_loading:    'carregando dados de mercado…',
     live_ok:         'dados ao vivo',
     live_error:      'dados ao vivo indisponíveis — usando valores padrão',
@@ -1318,6 +1356,7 @@ function setLang(lang) {
     b.classList.toggle('active', b.dataset.lang === lang)
   );
   applyTranslations();
+  stampDate();   // the month name is not a translation table entry
   // Re-render results if visible and inputs are still valid (skip alert)
   const supply  = parseFloat(document.getElementById('supply').value);
   const targetP = parseFloat(document.getElementById('targetPrice').value);
@@ -1860,22 +1899,30 @@ const SESSION_CASE = randCase();
 document.getElementById('caseNum').textContent = 'CASE #' + SESSION_CASE;
 
 // Signature date
-(function stampDate() {
+function stampDate() {
   const now = new Date();
   const day = now.getDate();
-  const suffix = (d => {
-    if (d >= 11 && d <= 13) return 'th';
-    return ['th','st','nd','rd','th','th','th','th','th','th'][d % 10];
-  })(day);
-  const months = ['January','February','March','April','May','June',
-                  'July','August','September','October','November','December'];
   const pad = n => String(n).padStart(2, '0');
-  const dateStr = `${pad(day)}${suffix} ${months[now.getMonth()]}, ${now.getFullYear()}`;
+  let dateStr;
+  if (LANG === 'pt') {
+    const meses = ['janeiro','fevereiro','março','abril','maio','junho',
+                   'julho','agosto','setembro','outubro','novembro','dezembro'];
+    dateStr = `${pad(day)} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+  } else {
+    const suffix = (d => {
+      if (d >= 11 && d <= 13) return 'th';
+      return ['th','st','nd','rd','th','th','th','th','th','th'][d % 10];
+    })(day);
+    const months = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    dateStr = `${pad(day)}${suffix} ${months[now.getMonth()]}, ${now.getFullYear()}`;
+  }
   const el = document.getElementById('sigDate');
   if (el) el.textContent = dateStr;
   const sector = document.getElementById('sigSector');
   if (sector) sector.textContent = 'CH-' + now.getFullYear();
-})();
+}
+stampDate();
 
 // Live data is fetched on demand when a coin is selected (see applyPreset → fetchCoinData)
 
