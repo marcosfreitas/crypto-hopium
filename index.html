@@ -117,6 +117,7 @@
       text-transform: uppercase;
     }
     .lang-btn:hover { border-color: var(--ink-light); color: var(--ink-light); }
+    .lang-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
     .lang-btn.active {
       background: var(--ink);
       color: var(--paper);
@@ -337,6 +338,7 @@
       transition: all 0.12s;
     }
     .pill:hover { border-color: var(--red); color: var(--red); }
+    .pill:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
     /* ── Collapsed claim summary ─────────────────────────── */
     /* An explicit display value beats the user-agent's [hidden] rule, so the
@@ -397,6 +399,7 @@
       border: 1px solid rgba(255,255,255,0.12);
       pointer-events: none;
     }
+    .btn-analyze:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
     .btn-analyze:hover  { background: #0d0a05; }
     .btn-analyze:active { transform: translateY(1px); }
 
@@ -441,6 +444,10 @@
        drops into the flow and the gutter is removed again. */
     @media (min-width: 940px) {
       .verdict-body { padding-right: 348px; }
+      /* The ladder is the last row of the card, below the vertically centred
+         stamp, so it reclaims the stamp gutter instead of being squeezed into
+         the remaining half. Verified clear of the stamp on every verdict. */
+      .ladder { margin-right: -320px; }
     }
 
     .stamp {
@@ -457,7 +464,8 @@
       pointer-events: none;
       text-transform: uppercase;
     }
-    .stamp.show { animation: stamp-thud 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards; }
+    .stamp.show  { animation: stamp-thud 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards; }
+    .stamp.shown { opacity: 1; }
     @keyframes stamp-thud {
       0%   { opacity:0; transform:translateY(-50%) rotate(-12deg) scale(3.5); filter:blur(3px); }
       55%  { opacity:1; transform:translateY(-50%) rotate(-12deg) scale(0.92); filter:blur(0); }
@@ -488,11 +496,11 @@
     .stamp-red    { color: var(--red);    border-color: var(--red);    background: rgba(168,28,28,0.06); }
     .stamp-purple { color: var(--purple); border-color: var(--purple); background: rgba(59,7,100,0.08); }
 
-    .vb-green  { background: rgba(26,92,46,0.04); }
-    .vb-amber  { background: rgba(146,64,14,0.04); }
-    .vb-orange { background: rgba(194,65,12,0.05); }
-    .vb-red    { background: rgba(168,28,28,0.06); }
-    .vb-purple { background: rgba(59,7,100,0.07); }
+    .vb-green  { background: rgba(26,92,46,0.04);  border-left: 7px solid var(--green); }
+    .vb-amber  { background: rgba(146,64,14,0.04);  border-left: 7px solid var(--amber); }
+    .vb-orange { background: rgba(194,65,12,0.05);  border-left: 7px solid var(--orange); }
+    .vb-red    { background: rgba(168,28,28,0.06);  border-left: 7px solid var(--red); }
+    .vb-purple { background: rgba(59,7,100,0.07);   border-left: 7px solid var(--purple); }
 
     /* ── Exhibits ────────────────────────────────────────── */
     .exhibits { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--line); margin-bottom: 28px; }
@@ -503,9 +511,7 @@
     .exhibit:nth-last-child(-n+2) { border-bottom: none; }
     @media (max-width: 520px) { .exhibit { border-right: none; } .exhibit:last-child { border-bottom: none; } }
 
-    .exhibit-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-    .exhibit-tag    { flex-shrink: 0; align-self: flex-start; font-family: var(--ff-mono); font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); border: 1px solid var(--line); padding: 1px 5px; white-space: nowrap; }
-    .exhibit-label  { flex: 1; font-family: var(--ff-mono); font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); }
+    .exhibit-label  { font-family: var(--ff-mono); font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
     /* Condensed with tabular figures so the four values line up column to
        column; Bebas has no tabular set and drifted. */
     .exhibit-value { font-family: var(--ff-condensed); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 1.75rem; letter-spacing: -0.2px; color: var(--ink); line-height: 1.1; margin-bottom: 5px; }
@@ -595,8 +601,17 @@
       }
     }
 
-    /* Verdict ladder — the 0-100 score, as steps rather than a needle */
-    .ladder { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 14px; }
+    /* Verdict ladder — the 0-100 score, as steps rather than a needle.
+       Lives inside the verdict card, under the score line. */
+    .verdict-score {
+      font-family: var(--ff-mono);
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-top: 22px;
+    }
+    .ladder { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 8px; }
     .ladder span {
       border-top: 4px solid var(--line);
       padding-top: 6px;
@@ -728,7 +743,7 @@
   <div class="form-grid">
 
     <div class="field full">
-      <label data-i18n="label_preset">Coin Preset (auto-fills supply &amp; current price)</label>
+      <label for="coinPreset" data-i18n="label_preset">Coin</label>
       <select id="coinPreset" onchange="applyPreset()">
         <option value="" data-i18n="opt_manual">— enter manually below —</option>
         <optgroup label="── Layer 1 ──────────────────">
@@ -788,6 +803,7 @@
           <option value="dogwifcoin">dogwifhat (WIF)</option>
         </optgroup>
       </select>
+      <div class="hint" data-i18n="hint_preset">Fills in supply and today’s price for you</div>
       <!-- Live data indicator -->
       <div class="live-row">
         <span class="live-badge loading" id="liveBadge" style="visibility:hidden">
@@ -800,15 +816,15 @@
     </div>
 
     <div class="field">
-      <label data-i18n="label_supply">Circulating Supply</label>
+      <label for="supply" data-i18n="label_supply">Circulating supply</label>
       <input type="text" inputmode="numeric" id="supply" data-i18n-ph="ph_supply" placeholder="e.g. 57,940,000,000" oninput="maskNumber(this)" />
-      <div class="hint" data-i18n="hint_supply">Total coins in circulation</div>
+      <div class="hint" data-i18n="hint_supply">Coins in circulation today</div>
     </div>
 
     <div class="field">
-      <label data-i18n="label_current">Current Price (USD)</label>
+      <label for="currentPrice" data-i18n="label_current">Price today (USD)</label>
       <input type="text" inputmode="decimal" id="currentPrice" data-i18n-ph="ph_current" placeholder="e.g. 0.50" oninput="maskNumber(this)" />
-      <div class="hint" data-i18n="hint_current">Today's price — used for ROI calc</div>
+      <div class="hint" data-i18n="hint_current">Used for the multiple and your return</div>
     </div>
 
   </div>
@@ -820,35 +836,35 @@
   <div class="form-grid">
 
     <div class="field key full">
-      <label for="targetPrice" data-i18n="label_target">Predicted / Target Price (USD)</label>
+      <label for="targetPrice" data-i18n="label_target">Target price they claim (USD)</label>
       <input type="text" inputmode="decimal" id="targetPrice" data-i18n-ph="ph_target" placeholder="e.g. 10.00" oninput="maskNumber(this)" />
-      <div class="hint" data-i18n="hint_target">"To the moon" price</div>
+      <div class="hint" data-i18n="hint_target">The "to the moon" number</div>
     </div>
 
     <div class="field">
-      <label data-i18n="label_years">Claimed Timeframe (years)</label>
+      <label for="years" data-i18n="label_years">By when (years)</label>
       <input type="number" id="years" data-i18n-ph="ph_years" placeholder="e.g. 5" min="0" step="any" />
-      <div class="hint" data-i18n="hint_years">Optional — how long they claim</div>
+      <div class="hint" data-i18n="hint_years">Optional</div>
     </div>
 
     <div class="field">
-      <label data-i18n="label_invest">Your Investment (USD)</label>
+      <label for="investment" data-i18n="label_invest">If you put in (USD)</label>
       <input type="text" inputmode="decimal" id="investment" value="100" oninput="maskNumber(this)" />
       <div class="pills">
-        <span class="pill" onclick="setInvest(100)">$100</span>
-        <span class="pill" onclick="setInvest(500)">$500</span>
-        <span class="pill" onclick="setInvest(1000)">$1 000</span>
-        <span class="pill" onclick="setInvest(5000)">$5 000</span>
+        <button type="button" class="pill" onclick="setInvest(100)">$100</button>
+        <button type="button" class="pill" onclick="setInvest(500)">$500</button>
+        <button type="button" class="pill" onclick="setInvest(1000)">$1 000</button>
+        <button type="button" class="pill" onclick="setInvest(5000)">$5 000</button>
       </div>
     </div>
 
     <div class="field">
-      <label data-i18n="label_rich">Your "Rich" Goal (USD)</label>
+      <label for="richGoal" data-i18n="label_rich">And "rich" means (USD)</label>
       <input type="text" inputmode="numeric" id="richGoal" value="1,000,000" oninput="maskNumber(this)" />
       <div class="pills">
-        <span class="pill" onclick="setGoal(100000)">$100k</span>
-        <span class="pill" onclick="setGoal(1000000)">$1M</span>
-        <span class="pill" onclick="setGoal(10000000)">$10M</span>
+        <button type="button" class="pill" onclick="setGoal(100000)">$100k</button>
+        <button type="button" class="pill" onclick="setGoal(1000000)">$1M</button>
+        <button type="button" class="pill" onclick="setGoal(10000000)">$10M</button>
       </div>
     </div>
 
@@ -875,6 +891,8 @@
         <div id="verdictTitle" class="verdict-text"></div>
         <div id="verdictSub" class="verdict-sub"></div>
         <div id="verdictStamp" class="stamp"></div>
+        <div id="verdictScore" class="verdict-score"></div>
+        <div class="ladder" id="ladder"></div>
       </div>
     </div>
 
@@ -882,34 +900,22 @@
     <div class="section-label" data-i18n="exhibits_label">Exhibits</div>
     <div class="exhibits">
       <div class="exhibit">
-        <div class="exhibit-header">
-          <div class="exhibit-label" data-i18n="ex_a">Projected Market Cap</div>
-          <div class="exhibit-tag" data-i18n="ex_tag_a">Exhibit A</div>
-        </div>
+        <div class="exhibit-label" data-i18n="ex_a">Market cap this needs</div>
         <div class="exhibit-value" id="eMarketCap">—</div>
         <div class="exhibit-sub" id="eMarketCapCmp"></div>
       </div>
       <div class="exhibit">
-        <div class="exhibit-header">
-          <div class="exhibit-label" data-i18n="ex_b">Required Price Multiplier</div>
-          <div class="exhibit-tag" data-i18n="ex_tag_b">Exhibit B</div>
-        </div>
+        <div class="exhibit-label" data-i18n="ex_b">Price multiple</div>
         <div class="exhibit-value" id="eMultiplier">—</div>
-        <div class="exhibit-sub" data-i18n="ex_b_sub">from current price</div>
+        <div class="exhibit-sub" data-i18n="ex_b_sub">from the price today</div>
       </div>
       <div class="exhibit">
-        <div class="exhibit-header">
-          <div class="exhibit-label" data-i18n="ex_c">Your Projected Return</div>
-          <div class="exhibit-tag" data-i18n="ex_tag_c">Exhibit C</div>
-        </div>
+        <div class="exhibit-label" data-i18n="ex_c">Your money becomes</div>
         <div class="exhibit-value" id="eReturn">—</div>
         <div class="exhibit-sub" id="eReturnCmp"></div>
       </div>
       <div class="exhibit">
-        <div class="exhibit-header">
-          <div class="exhibit-label" data-i18n="ex_d">Coins Purchased</div>
-          <div class="exhibit-tag" data-i18n="ex_tag_d">Exhibit D</div>
-        </div>
+        <div class="exhibit-label" data-i18n="ex_d">Coins you would own</div>
         <div class="exhibit-value" id="eCoins">—</div>
         <div class="exhibit-sub" id="eCoinsCmp"></div>
       </div>
@@ -925,7 +931,6 @@
         <div class="ruler-cap" data-i18n="ruler_cap">Money scale — each step is 10×</div>
         <div class="ruler" id="ruler"></div>
       </div>
-      <div class="ladder" id="ladder"></div>
     </div>
 
     <!-- Evidence File -->
@@ -1018,22 +1023,23 @@ const T = {
     tagline:         '// Projected Market Cap · Return Analysis · Delusion Scale //',
     section1:        'Section I — Subject Identification',
     section2:        'Section II — The Claim Under Investigation',
-    label_preset:    'Coin Preset (auto-fills supply & current price)',
+    label_preset:    'Coin',
+    hint_preset:     'Fills in supply and today\u2019s price for you',
     opt_manual:      '— enter manually below —',
-    label_supply:    'Circulating Supply',
+    label_supply:    'Circulating supply',
     ph_supply:       'e.g. 57,940,000,000',
-    hint_supply:     'Total coins in circulation',
-    label_current:   'Current Price (USD)',
+    hint_supply:     'Coins in circulation today',
+    label_current:   'Price today (USD)',
     ph_current:      'e.g. 0.50',
-    hint_current:    "Today's price — used for ROI calc",
-    label_target:    'Predicted / Target Price (USD)',
+    hint_current:    'Used for the multiple and your return',
+    label_target:    'Target price they claim (USD)',
     ph_target:       'e.g. 10.00',
-    hint_target:     '"To the moon" price',
-    label_years:     'Claimed Timeframe (years)',
+    hint_target:     'The "to the moon" number',
+    label_years:     'By when (years)',
     ph_years:        'e.g. 5',
-    hint_years:      'Optional — how long they claim',
-    label_invest:    'Your Investment (USD)',
-    label_rich:      'Your "Rich" Goal (USD)',
+    hint_years:      'Optional',
+    label_invest:    'If you put in (USD)',
+    label_rich:      'And "rich" means (USD)',
     btn_analyze:     'ANALYZE THE CLAIM',
     report_divider:  'Analysis Report',
     verdict_label:   'Verdict',
@@ -1042,11 +1048,10 @@ const T = {
     current_lbl:     'Current',
     target_lbl:      'Target price',
     exhibits_label:  'Exhibits',
-    ex_tag_a: 'Exhibit A', ex_a: 'Projected Market Cap',
-    ex_tag_b: 'Exhibit B', ex_b: 'Required Price Multiplier', ex_b_sub: 'from current price',
-    ex_tag_c: 'Exhibit C', ex_c: 'Your Projected Return',
-    ex_tag_d: 'Exhibit D', ex_d: 'Coins Purchased',
-    threat_title:    'Threat Level — Delusion Meter',
+    ex_a: 'Market cap this needs',
+    ex_b: 'Price multiple', ex_b_sub: 'from the price today',
+    ex_c: 'Your money becomes',
+    ex_d: 'Coins you would own',
     ruler_title:     'Where that market cap lands',
     ruler_cap:       'Money scale — each step is 10×',
     ruler_claim:     'This claim',
@@ -1069,14 +1074,11 @@ const T = {
     btn_edit:        'Edit the claim',
     copied:          'Copied',
     copy_failed:     'Press Ctrl+C to copy',
-    tick_1: 'Plausible', tick_2: 'Speculative', tick_3: 'Ambitious', tick_4: 'Unlikely', tick_5: 'Delusional', tick_6: 'Impossible', tick_7: 'Cosmic',
     threat_levels:   ['Plausible','Speculative','Ambitious','Unlikely','Delusional','Impossible','Cosmic'],
     ev_header_1:     'Market Cap Evidence File',
     ev_header_2:     'Projected vs. Reference Points',
     ev_above:        '↑ {r}× ABOVE',
     ev_below:        '↓ {r}× BELOW',
-    above_lbl:       'above',
-    below_lbl:       'below',
     sig_1: 'Authorizer', sig_2: 'Date of Analysis', sig_3: 'Authorizing Sector',
     footer_text:     'Price data sourced from Binance API. For educational purposes only. Not financial advice. Past performance does not indicate future results.',
     live_loading:    'loading market data…',
@@ -1159,22 +1161,23 @@ const T = {
     tagline:         '// Cap. de Mercado Projetada · Análise de Retorno · Escala de Ilusão //',
     section1:        'Seção I — Identificação do Ativo',
     section2:        'Seção II — A Alegação em Análise',
-    label_preset:    'Preset de Moeda (preenche fornecimento e preço atual)',
+    label_preset:    'Moeda',
+    hint_preset:     'Preenche fornecimento e preço de hoje pra você',
     opt_manual:      '— inserir manualmente abaixo —',
-    label_supply:    'Fornecimento Circulante',
+    label_supply:    'Fornecimento circulante',
     ph_supply:       'ex: 57.940.000.000',
-    hint_supply:     'Total de moedas em circulação',
-    label_current:   'Preço Atual (USD)',
+    hint_supply:     'Moedas em circulação hoje',
+    label_current:   'Preço hoje (USD)',
     ph_current:      'ex: 0,50',
-    hint_current:    'Preço hoje — usado para calcular retorno',
-    label_target:    'Preço Previsto / Alvo (USD)',
+    hint_current:    'Usado no múltiplo e no seu retorno',
+    label_target:    'Preço alvo que alegam (USD)',
     ph_target:       'ex: 10,00',
-    hint_target:     'O preço "pra lua"',
-    label_years:     'Prazo Alegado (anos)',
+    hint_target:     'O número "pra lua"',
+    label_years:     'Até quando (anos)',
     ph_years:        'ex: 5',
-    hint_years:      'Opcional — quanto tempo alegam',
-    label_invest:    'Seu Investimento (USD)',
-    label_rich:      'Sua Meta de "Ficar Rico" (USD)',
+    hint_years:      'Opcional',
+    label_invest:    'Se você puser (USD)',
+    label_rich:      'E "rico" significa (USD)',
     btn_analyze:     'ANALISAR A ALEGAÇÃO',
     report_divider:  'Relatório de Análise',
     verdict_label:   'Veredicto',
@@ -1183,11 +1186,10 @@ const T = {
     current_lbl:     'Atual',
     target_lbl:      'Preço alvo',
     exhibits_label:  'Evidências',
-    ex_tag_a: 'Evidência A', ex_a: 'Cap. de Mercado Projetada',
-    ex_tag_b: 'Evidência B', ex_b: 'Multiplicador de Preço Necessário', ex_b_sub: 'a partir do preço atual',
-    ex_tag_c: 'Evidência C', ex_c: 'Seu Retorno Projetado',
-    ex_tag_d: 'Evidência D', ex_d: 'Moedas Compradas',
-    threat_title:    'Nível de Ameaça — Medidor de Ilusão',
+    ex_a: 'Cap. de mercado necessária',
+    ex_b: 'Múltiplo de preço', ex_b_sub: 'a partir do preço de hoje',
+    ex_c: 'Seu dinheiro vira',
+    ex_d: 'Moedas que você teria',
     ruler_title:     'Onde essa cap. de mercado cai',
     ruler_cap:       'Escala de dinheiro: cada passo vale 10×',
     ruler_claim:     'Esta alegação',
@@ -1210,14 +1212,11 @@ const T = {
     btn_edit:        'Editar a alegação',
     copied:          'Copiado',
     copy_failed:     'Use Ctrl+C para copiar',
-    tick_1: 'Plausível', tick_2: 'Especulativo', tick_3: 'Ambicioso', tick_4: 'Improvável', tick_5: 'Ilusório', tick_6: 'Impossível', tick_7: 'Cósmico',
     threat_levels:   ['Plausível','Especulativo','Ambicioso','Improvável','Ilusório','Impossível','Cósmico'],
     ev_header_1:     'Arquivo de Evidências — Cap. de Mercado',
     ev_header_2:     'Projetado vs. Pontos de Referência',
     ev_above:        '↑ {r}× ACIMA',
     ev_below:        '↓ {r}× ABAIXO',
-    above_lbl:       'acima de',
-    below_lbl:       'abaixo de',
     sig_1: 'Autorizador', sig_2: 'Data da Análise', sig_3: 'Setor Autorizador',
     footer_text:     'Dados de fornecimento e preço obtidos da API CoinCap. Apenas para fins educativos. Não é conselho financeiro. Desempenho passado não indica resultados futuros.',
     live_loading:    'carregando dados de mercado…',
@@ -1322,7 +1321,7 @@ function setLang(lang) {
   // Re-render results if visible and inputs are still valid (skip alert)
   const supply  = parseFloat(document.getElementById('supply').value);
   const targetP = parseFloat(document.getElementById('targetPrice').value);
-  if (document.getElementById('result').style.display !== 'none' && supply && targetP) calculate({ silent: true });
+  if (document.getElementById('result').style.display === 'block' && supply && targetP) calculate({ silent: true });
   // The collapsed summary holds translated text of its own
   if (LAST_CASE && !document.getElementById('caseSummary').hidden) collapseForm(LAST_CASE);
 }
@@ -1598,8 +1597,8 @@ function renderLadder(verdictIndex, score) {
     '<span class="' + (i === verdictIndex ? 'on' : i < verdictIndex ? 'past' : '') + '">'
     + name + '</span>'
   ).join('');
-  document.getElementById('rulerReading').textContent +=
-    '  ·  ' + t('score_label') + ' ' + Math.round(score) + '/100';
+  document.getElementById('verdictScore').textContent =
+    t('score_label') + ' ' + Math.round(score) + '/100';
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1648,6 +1647,7 @@ function verdictText() {
     document.getElementById('vPriceSummary').textContent,
     t('ex_a') + ': ' + fmt(LAST_CASE.projMcap),
     document.getElementById('rulerReading').textContent,
+    document.getElementById('verdictScore').textContent,
     caseLink()
   ].join('\n');
 }
@@ -1778,6 +1778,7 @@ async function fetchCoinData(coinId) {
       maskNumber(priceEl);
       setBadge('ok', 'Binance — ' + t('live_ok'));
       updateCoinDisplay();
+      liveRecalc();
     }
   } catch (e) {
     setBadge('error', t('live_error'));
@@ -1833,11 +1834,25 @@ function applyPreset() {
   fetchCoinData(coinId);
 }
 
-function setInvest(v) { const el = document.getElementById('investment'); el.value = v; maskNumber(el); }
+// Live recalculation. Gated on a report already being on screen: the first
+// analysis still goes through the button (which is what may alert on missing
+// fields), and after that every edit updates the report in place.
+function liveRecalc() {
+  if (document.getElementById('result').style.display === 'block') calculate({ silent: true });
+}
+['supply', 'currentPrice', 'targetPrice', 'years', 'investment', 'richGoal'].forEach(id => {
+  document.getElementById(id).addEventListener('input', liveRecalc);
+});
+// The inline onchange runs applyPreset first, so the fields are already filled
+// by the time this listener fires.
+document.getElementById('coinPreset').addEventListener('change', liveRecalc);
+
+function setInvest(v) { const el = document.getElementById('investment'); el.value = v; maskNumber(el); liveRecalc(); }
 function setGoal(v)   {
   const el = document.getElementById('richGoal');
   el.value = v;
   maskNumber(el);
+  liveRecalc();
 }
 
 // ── Case number ───────────────────────────────────────────────
@@ -1893,6 +1908,7 @@ function calculate(opts) {
   const years    = parseFloat(document.getElementById('years').value);
 
   if (!supply || !targetP) {
+    if (silent) return;
     alert(LANG === 'pt'
       ? 'Por favor, preencha ao menos o Fornecimento Circulante e o Preço Alvo.'
       : 'Please fill in at least Circulating Supply and Predicted Price.');
@@ -1920,7 +1936,9 @@ function calculate(opts) {
   stamp.className = 'stamp ' + vd.stampCls;
   stamp.textContent = t(vd.keys[2]);
   void stamp.offsetWidth;
-  stamp.classList.add('show');
+  // Replaying the thud on every keystroke would be unreadable, so a silent
+  // re-render only reveals the stamp.
+  stamp.classList.add(silent ? 'shown' : 'show');
 
   // Price summary
   const priceSummary = currentP > 0
@@ -2204,6 +2222,31 @@ function runTests() {
   assert('threat_levels has 7 entries in both',
     T.en.threat_levels.length === 7 && T.pt.threat_levels.length === 7);
   assert('one ladder rung per verdict', T.en.threat_levels.length === VERDICT_DEFS.length);
+  assert('en defines every key pt defines',
+    Object.keys(T.pt).every(k => T.en[k] !== undefined),
+    Object.keys(T.pt).filter(k => T.en[k] === undefined));
+  // Every key must be reachable: named by a data-i18n* attribute, or quoted
+  // somewhere in the page's own script. Definitions inside T are unquoted
+  // (`label_preset:`), so only real uses (`t('label_preset')`) match.
+  const inDom = new Set();
+  document.querySelectorAll('[data-i18n],[data-i18n-html],[data-i18n-ph]').forEach(el => {
+    ['i18n', 'i18nHtml', 'i18nPh'].forEach(k => { if (el.dataset[k]) inDom.add(el.dataset[k]); });
+  });
+  const js = [...document.scripts].map(sc => sc.textContent).join('\n');
+  const dead = Object.keys(T.en).filter(k =>
+    !inDom.has(k) && !new RegExp("['\"]" + k + "['\"]").test(js));
+  assert('no unreachable i18n keys', dead.length === 0, dead);
+
+  // ── Accessibility ─────────────────────────────────────────
+  results.push('\naccessibility:');
+  const focusable = document.querySelectorAll('.pill');
+  assert('every quick-pick is a real button',
+    [...focusable].every(el => el.tagName === 'BUTTON'),
+    [...focusable].filter(el => el.tagName !== 'BUTTON').length + ' non-buttons');
+  const labels = [...document.querySelectorAll('#claimForm label')];
+  assert('every field label targets its control',
+    labels.every(l => l.htmlFor && document.getElementById(l.htmlFor)),
+    labels.filter(l => !l.htmlFor || !document.getElementById(l.htmlFor)).map(l => l.textContent));
 
   // ── fmt ───────────────────────────────────────────────────
   results.push('\nfmt:');
