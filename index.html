@@ -1693,15 +1693,38 @@ function verdictText() {
   ].join('\n');
 }
 
+// The async clipboard API needs a focused document and a permission the user
+// may have denied, and it is unavailable outside a secure context. execCommand
+// is deprecated but synchronous, asks for nothing, and still works everywhere,
+// so it is the second attempt rather than the message.
+function legacyCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;';
+  document.body.appendChild(ta);
+  ta.select();
+  ta.setSelectionRange(0, text.length);
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  if (ok) { ta.remove(); return true; }
+  // Both paths failed, so the message asks for Ctrl+C. Leave the text selected
+  // for a few seconds, otherwise that instruction copies nothing.
+  setTimeout(() => ta.remove(), 4000);
+  return false;
+}
+
 async function copyToClipboard(text, btn) {
   const original = btn.dataset.label || btn.textContent;
   btn.dataset.label = original;
+  let ok = false;
   try {
     await navigator.clipboard.writeText(text);
-    btn.textContent = t('copied');
+    ok = true;
   } catch (e) {
-    btn.textContent = t('copy_failed');
+    ok = legacyCopy(text);
   }
+  btn.textContent = t(ok ? 'copied' : 'copy_failed');
   setTimeout(() => { btn.textContent = btn.dataset.label; }, 1600);
 }
 
