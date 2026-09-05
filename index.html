@@ -7,16 +7,19 @@
   <title>Crypto Hopium — Reality Check</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Condensed:wght@500;600;700&display=swap" rel="stylesheet" />
   <style>
     /* ── Variables ─────────────────────────────────────── */
     :root {
       --paper:      #f0e8d0;
       --paper2:     #e8dfc4;
       --paper3:     #ddd3b4;
-      --ink:        #231c10;
-      --ink-light:  #5a4e38;
-      --ink-faint:  #5e5040;
+      /* Three separated ink steps. The previous --ink-light #5a4e38 and
+         --ink-faint #5e5040 differed by almost nothing, so a two-level
+         hierarchy rendered as one. Both new values clear 4.5:1 on --paper. */
+      --ink:        #1e1a12;   /* 15.1:1 */
+      --ink-light:  #4f4530;   /*  7.7:1 */
+      --ink-faint:  #6e624c;   /*  4.9:1 */
       --line:       #c8bfa4;
       --red:        #a81c1c;
       --red-light:  #dc2626;
@@ -25,10 +28,14 @@
       --orange:     #c2410c;
       --purple:     #3b0764;
 
-      --ff-display:    'Bebas Neue', sans-serif;
-      --ff-body:       'Special Elite', cursive;
-      --ff-mono:       'Courier Prime', monospace;
-      --ff-condensed:  'Oswald', sans-serif;
+      --ff-display:    'Bebas Neue', Impact, sans-serif;
+      /* Special Elite is a distressed typewriter face: its strokes are broken
+         on purpose, so it is illegible below ~18px. It is reserved for the
+         stamp and the signature and must not be used for running text. */
+      --ff-doc:        'Special Elite', 'Courier New', cursive;
+      --ff-body:       'IBM Plex Mono', ui-monospace, 'Courier New', monospace;
+      --ff-mono:       'IBM Plex Mono', ui-monospace, 'Courier New', monospace;
+      --ff-condensed:  'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif;
     }
 
     /* ── Reset & Base ──────────────────────────────────── */
@@ -110,6 +117,7 @@
       text-transform: uppercase;
     }
     .lang-btn:hover { border-color: var(--ink-light); color: var(--ink-light); }
+    .lang-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
     .lang-btn.active {
       background: var(--ink);
       color: var(--paper);
@@ -128,32 +136,46 @@
       align-items: flex-start;
       margin-bottom: 20px;
     }
+    /* Letterhead sits above the masthead and is the first thing read, so it
+       gets the body face rather than the distressed one, and enough size and
+       tracking that the caps stay separable. */
     .file-dept {
       font-family: var(--ff-mono);
-      font-size: 0.8rem;
-      letter-spacing: 2px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 1.4px;
       text-transform: uppercase;
       color: var(--ink-light);
-      line-height: 1.8;
+      line-height: 2;
     }
     .file-num {
       font-family: var(--ff-mono);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.6px;
+      line-height: 2;
       color: var(--ink-light);
       text-align: right;
+      white-space: nowrap;
     }
-    .file-num span { display: block; font-weight: 700; font-size: 1rem; color: var(--ink); }
+    .file-num span { display: block; font-weight: 600; font-size: 0.95rem; color: var(--ink); letter-spacing: 1px; }
+    @media (max-width: 560px) {
+      .file-header { flex-direction: column; gap: 10px; }
+      .file-num { text-align: left; }
+    }
 
     /* ── Main Title ──────────────────────────────────────── */
     .main-title { text-align: center; padding: 8px 0 4px; }
+    /* Was Oswald 300 with 6px tracking: a thin condensed face at small size,
+       spaced far enough apart to stop reading as words. */
     .main-title .eyebrow {
       font-family: var(--ff-condensed);
-      font-weight: 300;
-      font-size: 0.9rem;
-      letter-spacing: 6px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      letter-spacing: 3.4px;
       text-transform: uppercase;
-      color: var(--ink-light);
-      margin-bottom: 4px;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
     }
     .main-title h1 {
       font-family: var(--ff-display);
@@ -163,6 +185,14 @@
       color: var(--ink);
     }
     .main-title h1 em { color: var(--red); font-style: normal; }
+    .main-title h1 span {
+      display: block;
+      font-size: clamp(1rem, 2.6vw, 1.55rem);
+      letter-spacing: 5px;
+      line-height: 1.2;
+      color: var(--ink-light);
+      margin-top: 12px;
+    }
     .main-title .tagline {
       font-family: var(--ff-mono);
       font-size: 0.88rem;
@@ -193,19 +223,24 @@
     .field { position: relative; }
     .field.full { grid-column: 1 / -1; }
 
+    /* Every label used to be uppercase and letterspaced, so nothing outranked
+       anything. Caps now mark structure only (section labels, table headers);
+       field labels are sentence case and carry their weight instead. */
     .field label {
       display: block;
       font-family: var(--ff-mono);
-      font-size: 0.78rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--ink-light);
+      font-size: 0.84rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      color: var(--ink);
       margin-bottom: 6px;
     }
     .field input, .field select {
       width: 100%;
-      font-family: var(--ff-mono);
-      font-size: 1.1rem;
+      font-family: var(--ff-condensed);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      font-size: 1.25rem;
       color: var(--ink);
       background: transparent;
       border: none;
@@ -216,8 +251,27 @@
       appearance: none;
       -webkit-appearance: none;
     }
+    .field select { font-family: var(--ff-mono); font-weight: 500; font-size: 1rem; }
     .field input:focus, .field select:focus { border-bottom-color: var(--red); }
-    .field input::placeholder { color: var(--ink-faint); font-style: italic; }
+    .field input:focus-visible, .field select:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+    .field input::placeholder { color: var(--ink-faint); font-weight: 500; }
+
+    /* The target price is the only figure the user actually supplies; the
+       preset fills the other two. It gets a rail and larger type so the
+       form has one obvious entry point. */
+    .field.key {
+      background: rgba(168,28,28,0.05);
+      border-left: 3px solid var(--red);
+      padding: 12px 14px 10px;
+      margin-left: -3px;
+    }
+    .field.key label {
+      color: var(--red);
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      letter-spacing: 1.6px;
+    }
+    .field.key input { font-size: 1.7rem; border-bottom-color: rgba(168,28,28,0.4); }
     .field select {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a4e38'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
@@ -226,7 +280,7 @@
       cursor: pointer;
     }
     .field select option { background: var(--paper); color: var(--ink); }
-    .field .hint { font-family: var(--ff-mono); font-size: 0.78rem; color: var(--ink-faint); margin-top: 5px; font-style: italic; }
+    .field .hint { font-family: var(--ff-mono); font-size: 0.79rem; line-height: 1.5; color: var(--ink-faint); margin-top: 6px; }
 
     /* ── Live Data Row ───────────────────────────────────── */
     .live-row {
@@ -284,6 +338,42 @@
       transition: all 0.12s;
     }
     .pill:hover { border-color: var(--red); color: var(--red); }
+    .pill:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+    /* ── Collapsed claim summary ─────────────────────────── */
+    /* An explicit display value beats the user-agent's [hidden] rule, so the
+       strip stayed on screen after the form was reopened. */
+    .case-summary[hidden] { display: none; }
+    .case-summary {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px; flex-wrap: wrap;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,0.025);
+      padding: 12px 16px;
+      margin-bottom: 8px;
+    }
+    .case-summary-text {
+      font-family: var(--ff-mono); font-size: 0.86rem; color: var(--ink-light);
+      font-variant-numeric: tabular-nums;
+    }
+    .case-summary-text b { color: var(--ink); font-weight: 600; }
+
+    .btn-ghost {
+      font-family: var(--ff-mono); font-size: 0.74rem; font-weight: 500;
+      letter-spacing: 1.4px; text-transform: uppercase;
+      background: transparent; border: 1px solid var(--line);
+      color: var(--ink-light); padding: 5px 11px; cursor: pointer;
+      transition: border-color 0.12s, color 0.12s;
+    }
+    .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+    .btn-ghost:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+    /* ── Share row ───────────────────────────────────────── */
+    .share-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .share-label {
+      font-family: var(--ff-mono); font-size: 0.72rem; letter-spacing: 1.6px;
+      text-transform: uppercase; color: var(--ink-faint); margin-right: 4px;
+    }
 
     /* ── Analyze Button ─────────────────────────────────── */
     .btn-analyze {
@@ -309,6 +399,7 @@
       border: 1px solid rgba(255,255,255,0.12);
       pointer-events: none;
     }
+    .btn-analyze:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
     .btn-analyze:hover  { background: #0d0a05; }
     .btn-analyze:active { transform: translateY(1px); }
 
@@ -347,13 +438,23 @@
     }
     .verdict-analysis { font-family: var(--ff-mono); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
     .verdict-text     { font-family: var(--ff-display); font-size: clamp(1.8rem, 6vw, 3rem); color: var(--ink); line-height: 1; margin-bottom: 14px; }
-    .verdict-sub      { font-family: var(--ff-mono); font-size: 0.98rem; color: var(--ink-light); line-height: 1.7; max-width: 540px; }
+    .verdict-sub      { font-family: var(--ff-mono); font-size: 0.95rem; color: var(--ink-light); line-height: 1.7; max-width: 62ch; }
+    /* The stamp is absolutely positioned in the card's right edge, so the copy
+       needs a reserved gutter or it runs underneath. Below 600px the stamp
+       drops into the flow and the gutter is removed again. */
+    @media (min-width: 940px) {
+      .verdict-body { padding-right: 348px; }
+      /* The ladder is the last row of the card, below the vertically centred
+         stamp, so it reclaims the stamp gutter instead of being squeezed into
+         the remaining half. Verified clear of the stamp on every verdict. */
+      .ladder { margin-right: -320px; }
+    }
 
     .stamp {
       position: absolute;
       top: 50%; right: 28px;
       transform: translateY(-50%) rotate(-12deg);
-      font-family: var(--ff-display);
+      font-family: var(--ff-doc);
       font-size: 2rem;
       letter-spacing: 3px;
       border: 5px solid;
@@ -363,7 +464,8 @@
       pointer-events: none;
       text-transform: uppercase;
     }
-    .stamp.show { animation: stamp-thud 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards; }
+    .stamp.show  { animation: stamp-thud 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards; }
+    .stamp.shown { opacity: 1; }
     @keyframes stamp-thud {
       0%   { opacity:0; transform:translateY(-50%) rotate(-12deg) scale(3.5); filter:blur(3px); }
       55%  { opacity:1; transform:translateY(-50%) rotate(-12deg) scale(0.92); filter:blur(0); }
@@ -372,12 +474,12 @@
       100% { opacity:1; transform:translateY(-50%) rotate(-12deg) scale(1); }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 939px) {
       .stamp {
         position: static;
         transform: rotate(-12deg);
         display: table; /* shrink-wraps to content width */
-        margin: 20px auto 4px;
+        margin: 30px auto 28px;
       }
       .stamp.show { animation: stamp-thud-mobile 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards; }
     }
@@ -388,17 +490,21 @@
       85%  { transform:rotate(-12deg) scale(0.97); }
       100% { opacity:1; transform:rotate(-12deg) scale(1); }
     }
+    @media (max-width: 520px) {
+      .stamp { font-size: 1.5rem; letter-spacing: 2px; border-width: 4px; margin: 24px auto 22px; }
+    }
+
     .stamp-green  { color: var(--green);  border-color: var(--green);  background: rgba(26,92,46,0.06); }
     .stamp-amber  { color: var(--amber);  border-color: var(--amber);  background: rgba(146,64,14,0.06); }
     .stamp-orange { color: var(--orange); border-color: var(--orange); background: rgba(194,65,12,0.06); }
     .stamp-red    { color: var(--red);    border-color: var(--red);    background: rgba(168,28,28,0.06); }
     .stamp-purple { color: var(--purple); border-color: var(--purple); background: rgba(59,7,100,0.08); }
 
-    .vb-green  { background: rgba(26,92,46,0.04); }
-    .vb-amber  { background: rgba(146,64,14,0.04); }
-    .vb-orange { background: rgba(194,65,12,0.05); }
-    .vb-red    { background: rgba(168,28,28,0.06); }
-    .vb-purple { background: rgba(59,7,100,0.07); }
+    .vb-green  { background: rgba(26,92,46,0.04);  border-left: 7px solid var(--green); }
+    .vb-amber  { background: rgba(146,64,14,0.04);  border-left: 7px solid var(--amber); }
+    .vb-orange { background: rgba(194,65,12,0.05);  border-left: 7px solid var(--orange); }
+    .vb-red    { background: rgba(168,28,28,0.06);  border-left: 7px solid var(--red); }
+    .vb-purple { background: rgba(59,7,100,0.07);   border-left: 7px solid var(--purple); }
 
     /* ── Exhibits ────────────────────────────────────────── */
     .exhibits { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--line); margin-bottom: 28px; }
@@ -409,66 +515,155 @@
     .exhibit:nth-last-child(-n+2) { border-bottom: none; }
     @media (max-width: 520px) { .exhibit { border-right: none; } .exhibit:last-child { border-bottom: none; } }
 
-    .exhibit-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-    .exhibit-tag    { flex-shrink: 0; align-self: flex-start; font-family: var(--ff-mono); font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); border: 1px solid var(--line); padding: 1px 5px; white-space: nowrap; }
-    .exhibit-label  { flex: 1; font-family: var(--ff-mono); font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); }
-    .exhibit-value { font-family: var(--ff-display); font-size: 1.8rem; letter-spacing: 1px; color: var(--ink); line-height: 1; margin-bottom: 5px; }
-    .exhibit-sub   { font-family: var(--ff-mono); font-size: 0.85rem; color: var(--ink-light); font-style: italic; }
+    .exhibit-label  { font-family: var(--ff-mono); font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+    /* Condensed with tabular figures so the four values line up column to
+       column; Bebas has no tabular set and drifted. */
+    .exhibit-value { font-family: var(--ff-condensed); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 1.75rem; letter-spacing: -0.2px; color: var(--ink); line-height: 1.1; margin-bottom: 5px; }
+    .exhibit-sub   { font-family: var(--ff-mono); font-size: 0.82rem; line-height: 1.5; color: var(--ink-light); }
 
-    /* ── Threat Level ─────────────────────────────────────── */
-    .threat-section { margin-bottom: 28px; }
-    .threat-label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
-    .threat-title   { font-family: var(--ff-condensed); font-weight: 600; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; color: var(--ink-light); }
-    .threat-reading { font-family: var(--ff-mono); font-size: 0.85rem; color: var(--ink-faint); }
-    .threat-track   { height: 12px; background: linear-gradient(to right, #1a5c2e, #78350f, #c2410c, #a81c1c, #3b0764); position: relative; border: 1px solid var(--line); }
-    .threat-track::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: repeating-linear-gradient(90deg, transparent, transparent calc(25% - 1px), rgba(240,232,208,0.35) calc(25% - 1px), rgba(240,232,208,0.35) 25%);
+    /* ── Reality Ruler ────────────────────────────────────────
+       Replaces the linear rainbow meter. Market caps span six orders of
+       magnitude, so a linear bar is the wrong instrument, and its needle
+       landed on top of its own tick label. This is a log axis: one decade
+       per step, real anchors marked on it, the claim dropped on in red. */
+    .ruler-section { margin-bottom: 28px; }
+    .ruler-head { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+    /* Same treatment as .section-label so the ruler reads as a peer of
+       Exhibits rather than a subsection of it. */
+    .ruler-title   {
+      display: flex; align-items: center; gap: 10px; flex: 1;
+      font-family: var(--ff-condensed); font-weight: 600; font-size: 0.82rem;
+      letter-spacing: 3.5px; text-transform: uppercase; color: var(--ink-faint);
     }
-    .threat-needle {
-      position: absolute;
-      top: -6px;
-      width: 3px;
-      height: 24px;
-      background: var(--ink);
-      transform: translateX(-50%);
-      transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 1px 0 0 0 var(--paper);
+    .ruler-title::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+    .ruler-reading { font-family: var(--ff-mono); font-size: 0.8rem; color: var(--ink-faint); }
+    .ruler-wrap { border: 1.5px solid var(--line); background: var(--paper); padding: 16px 16px 12px; }
+    .ruler-cap { font-family: var(--ff-mono); font-size: 0.72rem; letter-spacing: 1.4px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 18px; }
+    .ruler { position: relative; height: 194px; }
+
+    .ruler-axis { position: absolute; left: 0; right: 0; top: 106px; height: 2px; background: var(--ink); z-index: 2; }
+
+    .ruler-decade { position: absolute; left: var(--p); top: 106px; transform: translateX(-50%); z-index: 2; }
+    .ruler-decade i { display: block; width: 1px; height: 8px; background: var(--ink-faint); margin: 0 auto; }
+    .ruler-decade b {
+      display: block; font-family: var(--ff-condensed); font-weight: 600; font-size: 0.66rem;
+      color: var(--ink-faint); white-space: nowrap; text-align: center; margin-top: 3px;
+      letter-spacing: 0.4px; background: var(--paper); padding: 0 4px;
     }
-    .threat-needle::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 9px;
-      height: 9px;
-      background: var(--ink);
-      border-radius: 50%;
+
+    .ruler-anchor { position: absolute; left: var(--p); width: 1px; z-index: 2; }
+    .ruler-anchor i { position: absolute; left: 0; width: 1px; background: var(--line); }
+    /* Labels carry the page ground, so any line passing behind them is
+       knocked out instead of striking through the text. */
+    .ruler-anchor u {
+      position: absolute; text-decoration: none; white-space: nowrap;
+      font-family: var(--ff-mono); font-size: 0.7rem; line-height: 1.35; color: var(--ink-light);
+      transform: translateX(-50%); text-align: center; background: var(--paper); padding: 1px 5px;
     }
-    .threat-ticks { position: relative; height: 20px; margin-top: 8px; }
-    .threat-ticks span {
-      position: absolute;
-      transform: translateX(-50%);
+    .ruler-anchor u b {
+      display: block; font-family: var(--ff-condensed); font-weight: 700; font-size: 0.78rem;
+      color: var(--ink); font-variant-numeric: tabular-nums;
+    }
+    .ruler-anchor.up u   { top: 44px; }
+    .ruler-anchor.up i   { top: 82px; height: 24px; }
+    .ruler-anchor.down i { top: 108px; height: 40px; }
+    .ruler-anchor.down u { top: 148px; }
+
+    .ruler-claim-line { position: absolute; left: var(--p); top: 38px; bottom: 0; width: 1.5px; background: rgba(168,28,28,0.5); z-index: 1; }
+    .ruler-claim { position: absolute; left: var(--p); top: 0; z-index: 3; }
+    .ruler-claim i { position: absolute; left: -5px; top: 101px; width: 11px; height: 11px; background: var(--red); transform: rotate(45deg); }
+    .ruler-claim u {
+      position: absolute; top: 0; text-decoration: none; transform: translateX(-50%);
+      background: var(--red); color: #fbf3e2; padding: 3px 10px 4px; white-space: nowrap;
+      font-family: var(--ff-condensed); font-weight: 700; font-size: 0.86rem; line-height: 1.2;
+      letter-spacing: 0.3px; font-variant-numeric: tabular-nums;
+    }
+    .ruler-claim u s {
+      display: block; text-decoration: none; font-family: var(--ff-mono); font-size: 0.58rem;
+      font-weight: 500; letter-spacing: 1.4px; text-transform: uppercase; opacity: 0.9; line-height: 1.5;
+    }
+    .ruler-claim[data-edge="l"] u { transform: translateX(-6px); }
+    .ruler-claim[data-edge="r"] u { transform: translateX(calc(-100% + 6px)); }
+
+    /* Seven anchor labels laid across the axis need about 900px before they
+       stop colliding: the reference names are longer in Portuguese ("Todas as
+       ações", "Riqueza humana"), and "All gold" and "All stocks" sit only one
+       decade apart. Below that the axis rotates and the labels stack. */
+    @media (max-width: 900px) {
+      /* The rotated axis needs a fraction of a tablet's width, so cap it and
+         centre it instead of leaving half the card empty. */
+      .ruler { height: 436px; max-width: 470px; margin: 0 auto; }
+      .ruler-axis { left: 148px; right: auto; top: 0; bottom: 0; height: auto; width: 2px; }
+      .ruler-decade { top: var(--p); left: 148px; transform: translateY(-50%); display: flex; align-items: center; gap: 5px; }
+      .ruler-decade i { width: 7px; height: 1px; margin: 0; }
+      .ruler-decade b { margin: 0; font-size: 0.64rem; background: none; padding: 0; }
+      .ruler-anchor { left: 0; right: 0; top: var(--p); width: auto; transform: translateY(-50%); }
+      .ruler-anchor i { display: none; }
+      .ruler-anchor.up u, .ruler-anchor.down u {
+        position: static; transform: none; top: auto; text-align: right;
+        width: 140px; padding: 0; background: none; display: block;
+      }
+      .ruler-anchor u b { display: inline; font-size: 0.72rem; margin-left: 6px; }
+      .ruler-claim-line { display: none; }
+      .ruler-claim { left: 0; right: 0; top: var(--p); transform: translateY(-50%); }
+      .ruler-claim i { display: none; }
+      /* Decade labels also live to the right of the axis, so the claim chip
+         has to clear them: axis 148 + tick 7 + the widest decade label. */
+      /* <u> is inline, so width:fit-content is inert on it and the block-level
+         <s> inside stretched its box to the full container. */
+      .ruler-claim u, .ruler-claim[data-edge] u {
+        position: static; transform: none; display: inline-block;
+        margin-left: 210px; width: fit-content;
+      }
+    }
+
+    /* Below 480px the widened label column, the decade labels and the claim
+       chip stop fitting side by side. Everything shrinks one step and the
+       chip drops its caption: it is the only red mark on the ruler, and the
+       reading line right above the chart already names where the claim sits. */
+    @media (max-width: 480px) {
+      .ruler-anchor.up u, .ruler-anchor.down u { width: 124px; font-size: 0.63rem; }
+      .ruler-anchor u b { font-size: 0.65rem; margin-left: 4px; }
+      .ruler-axis   { left: 132px; }
+      .ruler-decade { left: 132px; }
+      .ruler-decade b { font-size: 0.6rem; }
+      .ruler-claim u s { display: none; }
+      .ruler-claim u, .ruler-claim[data-edge] u { margin-left: 190px; font-size: 0.8rem; }
+    }
+
+    /* Verdict ladder — the 0-100 score, as steps rather than a needle.
+       Lives inside the verdict card, under the score line. */
+    .verdict-score {
       font-family: var(--ff-mono);
-      font-size: 0.66rem;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       color: var(--ink-faint);
-      letter-spacing: 0.3px;
-      white-space: nowrap;
+      margin-top: 22px;
     }
-    .threat-ticks span:nth-child(1) { left:  8%; }
-    .threat-ticks span:nth-child(2) { left: 20%; }
-    .threat-ticks span:nth-child(3) { left: 32%; }
-    .threat-ticks span:nth-child(4) { left: 46%; }
-    .threat-ticks span:nth-child(5) { left: 61%; }
-    .threat-ticks span:nth-child(6) { left: 75%; }
-    .threat-ticks span:nth-child(7) { left: 90%; }
+    .ladder { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 8px; }
+    .ladder span {
+      border-top: 4px solid var(--line);
+      padding-top: 6px;
+      font-family: var(--ff-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      line-height: 1.3;
+    }
+    .ladder span.past { border-top-color: var(--ink-faint); }
+    .ladder span.on   { border-top-color: currentColor; font-weight: 600; }
+    @media (max-width: 620px) {
+      .ladder span { font-size: 0; padding-top: 0; height: 5px; border-top-width: 5px; }
+    }
 
     /* ── Evidence File ───────────────────────────────────── */
     .evidence-file { border: 1.5px solid var(--line); margin-bottom: 28px; }
-    .evidence-file-header { background: var(--ink); color: var(--paper); font-family: var(--ff-condensed); font-weight: 600; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; padding: 9px 16px; display: flex; justify-content: space-between; }
+    .evidence-file-header { background: var(--ink); color: var(--paper); font-family: var(--ff-condensed); font-weight: 600; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; padding: 9px 16px; display: flex; justify-content: space-between; gap: 12px; }
+    @media (max-width: 520px) {
+      .evidence-file-header { flex-direction: column; gap: 2px; letter-spacing: 2px; }
+    }
     .evidence-row { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid var(--line); font-size: 0.9rem; }
     .evidence-row:last-child { border-bottom: none; }
     .ev-icon  { width: 22px; text-align: center; font-size: 1rem; flex-shrink: 0; }
@@ -477,6 +672,20 @@
     .ev-val   { font-family: var(--ff-mono); font-size: 0.92rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
     .ev-badge { font-family: var(--ff-condensed); font-weight: 700; font-size: 0.75rem; letter-spacing: 1.5px; padding: 2px 7px; white-space: nowrap; flex-shrink: 0; }
     .ev-below { background: rgba(26,92,46,0.12);  color: var(--green); border: 1px solid rgba(26,92,46,0.3); }
+    .ev-name sup { color: var(--red); font-size: 0.7em; }
+    .evidence-note {
+      font-family: var(--ff-mono); font-size: 0.76rem; line-height: 1.6;
+      color: var(--ink-faint); padding: 10px 16px; border-top: 1px solid var(--line);
+    }
+    /* Value and badge stack under the name rather than squeezing three
+       columns into a phone. */
+    @media (max-width: 560px) {
+      .evidence-row { flex-wrap: wrap; row-gap: 4px; }
+      .ev-name { flex: 1 1 100%; order: 1; }
+      .ev-icon, .ev-logo { order: 0; }
+      .ev-val { order: 2; margin-left: 34px; }
+      .ev-badge { order: 3; margin-left: auto; }
+    }
     .ev-above { background: rgba(168,28,28,0.1);  color: var(--red);   border: 1px solid rgba(168,28,28,0.3); }
 
     /* ── Case Notes ──────────────────────────────────────── */
@@ -499,11 +708,32 @@
     .page-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center; }
     .page-footer p { font-family: var(--ff-mono); font-size: 0.78rem; color: var(--ink-faint); line-height: 1.8; letter-spacing: 0.5px; }
 
-    .sig-line { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .sig-line { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); }
+    /* 3 x 140px + 2 x 16px gap = 452px, so below that the row stacks. */
+    @media (max-width: 520px) {
+      .sig-line  { flex-direction: column; align-items: center; gap: 26px; }
+      .sig-block { width: 100%; }
+    }
     .sig-block { display: flex; flex-direction: column; align-items: center; min-width: 140px; flex: 1; justify-content: flex-end; }
     .sig-block svg { display: block; margin-bottom: 2px; overflow: visible; }
     .sig-block .sig-label { font-family: var(--ff-mono); font-size: 0.72rem; color: var(--ink-faint); border-top: 1px solid var(--ink-faint); padding-top: 4px; width: 100%; text-align: center; margin-top: 4px; }
-    .sig-block .sig-value { font-family: var(--ff-mono); font-size: 0.88rem; color: var(--ink); font-weight: 700; }
+    .sig-block .sig-value { font-family: var(--ff-mono); font-size: 0.88rem; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+    /* The analyst's name is handwriting on a printed form: the one place the
+       distressed face is both large enough and true to the object. */
+    .sig-block .sig-value.sig-name { font-family: var(--ff-doc); font-size: 1.05rem; font-weight: 400; }
+
+    /* ── Motion preference ───────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      /* The stamp's entrance is an animation, so with motion reduced it has
+         to be given its resting appearance outright or it never appears. */
+      .stamp.show { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -532,18 +762,26 @@
   <!-- ── Title ─────────────────────────────────────────── -->
   <div class="main-title">
     <div class="eyebrow" data-i18n="eyebrow">Financial Fraud Forensics</div>
-    <h1>CRYPTO <em>HOPIUM</em><br><span data-i18n="title_sub">REALITY CHECK</span></h1>
+    <h1>CRYPTO <em>HOPIUM</em><span data-i18n="title_sub">REALITY CHECK</span></h1>
     <div class="tagline" data-i18n="tagline">// Projected Market Cap · Return Analysis · Delusion Scale //</div>
   </div>
 
   <hr class="rule-double" />
+
+  <!-- Collapsed stand-in for the form once a claim has been analysed -->
+  <div class="case-summary" id="caseSummary" hidden>
+    <span class="case-summary-text" id="caseSummaryText"></span>
+    <button type="button" class="btn-ghost" id="editClaim" onclick="expandForm()" data-i18n="btn_edit">Edit the claim</button>
+  </div>
+
+  <div id="claimForm">
 
   <!-- ── Section I ─────────────────────────────────────── -->
   <div class="section-label" data-i18n="section1">Section I — Subject Identification</div>
   <div class="form-grid">
 
     <div class="field full">
-      <label data-i18n="label_preset">Coin Preset (auto-fills supply &amp; current price)</label>
+      <label for="coinPreset" data-i18n="label_preset">Coin</label>
       <select id="coinPreset" onchange="applyPreset()">
         <option value="" data-i18n="opt_manual">— enter manually below —</option>
         <optgroup label="── Layer 1 ──────────────────">
@@ -603,6 +841,7 @@
           <option value="dogwifcoin">dogwifhat (WIF)</option>
         </optgroup>
       </select>
+      <div class="hint" data-i18n="hint_preset">Fills in supply and today’s price for you</div>
       <!-- Live data indicator -->
       <div class="live-row">
         <span class="live-badge loading" id="liveBadge" style="visibility:hidden">
@@ -615,15 +854,15 @@
     </div>
 
     <div class="field">
-      <label data-i18n="label_supply">Circulating Supply</label>
+      <label for="supply" data-i18n="label_supply">Circulating supply</label>
       <input type="text" inputmode="numeric" id="supply" data-i18n-ph="ph_supply" placeholder="e.g. 57,940,000,000" oninput="maskNumber(this)" />
-      <div class="hint" data-i18n="hint_supply">Total coins in circulation</div>
+      <div class="hint" data-i18n="hint_supply">Coins in circulation today</div>
     </div>
 
     <div class="field">
-      <label data-i18n="label_current">Current Price (USD)</label>
+      <label for="currentPrice" data-i18n="label_current">Price today (USD)</label>
       <input type="text" inputmode="decimal" id="currentPrice" data-i18n-ph="ph_current" placeholder="e.g. 0.50" oninput="maskNumber(this)" />
-      <div class="hint" data-i18n="hint_current">Today's price — used for ROI calc</div>
+      <div class="hint" data-i18n="hint_current">Used for the multiple and your return</div>
     </div>
 
   </div>
@@ -634,42 +873,44 @@
   <div class="section-label" data-i18n="section2">Section II — The Claim Under Investigation</div>
   <div class="form-grid">
 
-    <div class="field">
-      <label data-i18n="label_target">Predicted / Target Price (USD)</label>
+    <div class="field key full">
+      <label for="targetPrice" data-i18n="label_target">Target price they claim (USD)</label>
       <input type="text" inputmode="decimal" id="targetPrice" data-i18n-ph="ph_target" placeholder="e.g. 10.00" oninput="maskNumber(this)" />
-      <div class="hint" data-i18n="hint_target">"To the moon" price</div>
+      <div class="hint" data-i18n="hint_target">The "to the moon" number</div>
     </div>
 
     <div class="field">
-      <label data-i18n="label_years">Claimed Timeframe (years)</label>
+      <label for="years" data-i18n="label_years">By when (years)</label>
       <input type="number" id="years" data-i18n-ph="ph_years" placeholder="e.g. 5" min="0" step="any" />
-      <div class="hint" data-i18n="hint_years">Optional — how long they claim</div>
+      <div class="hint" data-i18n="hint_years">Optional</div>
     </div>
 
     <div class="field">
-      <label data-i18n="label_invest">Your Investment (USD)</label>
+      <label for="investment" data-i18n="label_invest">If you put in (USD)</label>
       <input type="text" inputmode="decimal" id="investment" value="100" oninput="maskNumber(this)" />
       <div class="pills">
-        <span class="pill" onclick="setInvest(100)">$100</span>
-        <span class="pill" onclick="setInvest(500)">$500</span>
-        <span class="pill" onclick="setInvest(1000)">$1 000</span>
-        <span class="pill" onclick="setInvest(5000)">$5 000</span>
+        <button type="button" class="pill" onclick="setInvest(100)">$100</button>
+        <button type="button" class="pill" onclick="setInvest(500)">$500</button>
+        <button type="button" class="pill" onclick="setInvest(1000)">$1 000</button>
+        <button type="button" class="pill" onclick="setInvest(5000)">$5 000</button>
       </div>
     </div>
 
     <div class="field">
-      <label data-i18n="label_rich">Your "Rich" Goal (USD)</label>
+      <label for="richGoal" data-i18n="label_rich">And "rich" means (USD)</label>
       <input type="text" inputmode="numeric" id="richGoal" value="1,000,000" oninput="maskNumber(this)" />
       <div class="pills">
-        <span class="pill" onclick="setGoal(100000)">$100k</span>
-        <span class="pill" onclick="setGoal(1000000)">$1M</span>
-        <span class="pill" onclick="setGoal(10000000)">$10M</span>
+        <button type="button" class="pill" onclick="setGoal(100000)">$100k</button>
+        <button type="button" class="pill" onclick="setGoal(1000000)">$1M</button>
+        <button type="button" class="pill" onclick="setGoal(10000000)">$10M</button>
       </div>
     </div>
 
   </div>
 
   <button class="btn-analyze" onclick="calculate()" data-i18n="btn_analyze">ANALYZE THE CLAIM</button>
+
+  </div><!-- #claimForm -->
 
   <!-- ══════════════════════════════════════════════════
        RESULT
@@ -688,6 +929,8 @@
         <div id="verdictTitle" class="verdict-text"></div>
         <div id="verdictSub" class="verdict-sub"></div>
         <div id="verdictStamp" class="stamp"></div>
+        <div id="verdictScore" class="verdict-score"></div>
+        <div class="ladder" id="ladder"></div>
       </div>
     </div>
 
@@ -695,56 +938,36 @@
     <div class="section-label" data-i18n="exhibits_label">Exhibits</div>
     <div class="exhibits">
       <div class="exhibit">
-        <div class="exhibit-header">
-          <div class="exhibit-label" data-i18n="ex_a">Projected Market Cap</div>
-          <div class="exhibit-tag" data-i18n="ex_tag_a">Exhibit A</div>
-        </div>
+        <div class="exhibit-label" data-i18n="ex_a">Market cap this needs</div>
         <div class="exhibit-value" id="eMarketCap">—</div>
         <div class="exhibit-sub" id="eMarketCapCmp"></div>
       </div>
       <div class="exhibit">
-        <div class="exhibit-header">
-          <div class="exhibit-label" data-i18n="ex_b">Required Price Multiplier</div>
-          <div class="exhibit-tag" data-i18n="ex_tag_b">Exhibit B</div>
-        </div>
+        <div class="exhibit-label" data-i18n="ex_b">Price multiple</div>
         <div class="exhibit-value" id="eMultiplier">—</div>
-        <div class="exhibit-sub" data-i18n="ex_b_sub">from current price</div>
+        <div class="exhibit-sub" data-i18n="ex_b_sub">from the price today</div>
       </div>
       <div class="exhibit">
-        <div class="exhibit-header">
-          <div class="exhibit-label" data-i18n="ex_c">Your Projected Return</div>
-          <div class="exhibit-tag" data-i18n="ex_tag_c">Exhibit C</div>
-        </div>
+        <div class="exhibit-label" data-i18n="ex_c">Your money becomes</div>
         <div class="exhibit-value" id="eReturn">—</div>
         <div class="exhibit-sub" id="eReturnCmp"></div>
       </div>
       <div class="exhibit">
-        <div class="exhibit-header">
-          <div class="exhibit-label" data-i18n="ex_d">Coins Purchased</div>
-          <div class="exhibit-tag" data-i18n="ex_tag_d">Exhibit D</div>
-        </div>
+        <div class="exhibit-label" data-i18n="ex_d">Coins you would own</div>
         <div class="exhibit-value" id="eCoins">—</div>
         <div class="exhibit-sub" id="eCoinsCmp"></div>
       </div>
     </div>
 
-    <!-- Threat Level -->
-    <div class="threat-section">
-      <div class="threat-label-row">
-        <span class="threat-title" data-i18n="threat_title">Threat Level — Delusion Meter</span>
-        <span class="threat-reading" id="threatReading"></span>
+    <!-- Reality Ruler -->
+    <div class="ruler-section">
+      <div class="ruler-head">
+        <span class="ruler-title" data-i18n="ruler_title">Where that market cap lands</span>
+        <span class="ruler-reading" id="rulerReading"></span>
       </div>
-      <div class="threat-track">
-        <div class="threat-needle" id="threatNeedle" style="left:2%"></div>
-      </div>
-      <div class="threat-ticks" id="threatTicks">
-        <span data-i18n="tick_1">Plausible</span>
-        <span data-i18n="tick_2">Speculative</span>
-        <span data-i18n="tick_3">Ambitious</span>
-        <span data-i18n="tick_4">Unlikely</span>
-        <span data-i18n="tick_5">Delusional</span>
-        <span data-i18n="tick_6">Impossible</span>
-        <span data-i18n="tick_7">Cosmic</span>
+      <div class="ruler-wrap">
+        <div class="ruler-cap" data-i18n="ruler_cap">Money scale — each step is 10×</div>
+        <div class="ruler" id="ruler"></div>
       </div>
     </div>
 
@@ -762,6 +985,13 @@
 
     <!-- Warning -->
     <div id="warningWrap"></div>
+
+    <!-- Share -->
+    <div class="share-row">
+      <span class="share-label" data-i18n="share_label">Case file</span>
+      <button type="button" class="btn-ghost" id="shareLink" onclick="copyCaseLink(this)" data-i18n="btn_copy_link">Copy link to this case</button>
+      <button type="button" class="btn-ghost" id="shareText" onclick="copyVerdict(this)" data-i18n="btn_copy_verdict">Copy the verdict</button>
+    </div>
 
     <!-- Signature -->
     <div class="sig-line">
@@ -788,7 +1018,7 @@
           <path d="M 6,52 C 50,57 100,56 134,50"
                 stroke="#231c10" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.38"/>
         </svg>
-        <div class="sig-value" style="margin-bottom:4px;">Math Doe</div>
+        <div class="sig-value sig-name" style="margin-bottom:4px;">Math Doe</div>
         <div class="sig-label" data-i18n="sig_1">Authorizer</div>
       </div>
 
@@ -831,22 +1061,23 @@ const T = {
     tagline:         '// Projected Market Cap · Return Analysis · Delusion Scale //',
     section1:        'Section I — Subject Identification',
     section2:        'Section II — The Claim Under Investigation',
-    label_preset:    'Coin Preset (auto-fills supply & current price)',
+    label_preset:    'Coin',
+    hint_preset:     'Fills in supply and today\u2019s price for you',
     opt_manual:      '— enter manually below —',
-    label_supply:    'Circulating Supply',
+    label_supply:    'Circulating supply',
     ph_supply:       'e.g. 57,940,000,000',
-    hint_supply:     'Total coins in circulation',
-    label_current:   'Current Price (USD)',
+    hint_supply:     'Coins in circulation today',
+    label_current:   'Price today (USD)',
     ph_current:      'e.g. 0.50',
-    hint_current:    "Today's price — used for ROI calc",
-    label_target:    'Predicted / Target Price (USD)',
+    hint_current:    'Used for the multiple and your return',
+    label_target:    'Target price they claim (USD)',
     ph_target:       'e.g. 10.00',
-    hint_target:     '"To the moon" price',
-    label_years:     'Claimed Timeframe (years)',
+    hint_target:     'The "to the moon" number',
+    label_years:     'By when (years)',
     ph_years:        'e.g. 5',
-    hint_years:      'Optional — how long they claim',
-    label_invest:    'Your Investment (USD)',
-    label_rich:      'Your "Rich" Goal (USD)',
+    hint_years:      'Optional',
+    label_invest:    'If you put in (USD)',
+    label_rich:      'And "rich" means (USD)',
     btn_analyze:     'ANALYZE THE CLAIM',
     report_divider:  'Analysis Report',
     verdict_label:   'Verdict',
@@ -855,24 +1086,43 @@ const T = {
     current_lbl:     'Current',
     target_lbl:      'Target price',
     exhibits_label:  'Exhibits',
-    ex_tag_a: 'Exhibit A', ex_a: 'Projected Market Cap',
-    ex_tag_b: 'Exhibit B', ex_b: 'Required Price Multiplier', ex_b_sub: 'from current price',
-    ex_tag_c: 'Exhibit C', ex_c: 'Your Projected Return',
-    ex_tag_d: 'Exhibit D', ex_d: 'Coins Purchased',
-    threat_title:    'Threat Level — Delusion Meter',
-    tick_1: 'Plausible', tick_2: 'Speculative', tick_3: 'Ambitious', tick_4: 'Unlikely', tick_5: 'Delusional', tick_6: 'Impossible', tick_7: 'Cosmic',
+    ex_a: 'Market cap this needs',
+    ex_b: 'Price multiple', ex_b_sub: 'from the price today',
+    ex_c: 'Your money becomes',
+    ex_d: 'Coins you would own',
+    ruler_title:     'Where that market cap lands',
+    ruler_cap:       'Money scale — each step is 10×',
+    ruler_claim:     'This claim',
+    ruler_between:   'Above {a}, below {b}',
+    ruler_under:     'Below {b}',
+    ruler_beyond:    'Past everything on the scale',
+    score_label:     'Delusion score',
+    anc_eth_s:  'Ethereum',
+    anc_btc_s:  'Bitcoin',
+    anc_tot_s:  'All crypto',
+    anc_gold_s: 'All gold',
+    anc_sp_s:   'S&P 500',
+    anc_stk_s:  'All stocks',
+    anc_gdp_s:  'World GDP',
+    anc_wlth_s: 'Human wealth',
+    gdp_note:        'World GDP is output per year, not a total. It is here for scale only and stays off the ruler, which compares totals.',
+    share_label:     'Case file',
+    btn_copy_link:   'Copy link to this case',
+    btn_copy_verdict:'Copy the verdict',
+    btn_edit:        'Edit the claim',
+    copied:          'Copied',
+    copy_failed:     'Press Ctrl+C to copy',
     threat_levels:   ['Plausible','Speculative','Ambitious','Unlikely','Delusional','Impossible','Cosmic'],
     ev_header_1:     'Market Cap Evidence File',
     ev_header_2:     'Projected vs. Reference Points',
     ev_above:        '↑ {r}× ABOVE',
     ev_below:        '↓ {r}× BELOW',
-    above_lbl:       'above',
-    below_lbl:       'below',
     sig_1: 'Authorizer', sig_2: 'Date of Analysis', sig_3: 'Authorizing Sector',
     footer_text:     'Price data sourced from Binance API. For educational purposes only. Not financial advice. Past performance does not indicate future results.',
     live_loading:    'loading market data…',
     live_ok:         'live data',
     live_error:      'live data unavailable — using presets',
+    live_none:       'no live pair — using the stored price',
     enter_price:     'enter current price',
     of_supply:       '% of supply',
     mcap_bigger:     '{r}× bigger than {name}',
@@ -935,6 +1185,7 @@ const T = {
     anc_wlth: 'Total human wealth',
 
     // fmt magnitude words
+    mag_q_short: 'Q', mag_t_short: 'T', mag_b_short: 'B',
     mag_quadrillion: 'quadrillion',
     mag_trillion:    'trillion',
     mag_billion:     'billion',
@@ -949,22 +1200,23 @@ const T = {
     tagline:         '// Cap. de Mercado Projetada · Análise de Retorno · Escala de Ilusão //',
     section1:        'Seção I — Identificação do Ativo',
     section2:        'Seção II — A Alegação em Análise',
-    label_preset:    'Preset de Moeda (preenche fornecimento e preço atual)',
+    label_preset:    'Moeda',
+    hint_preset:     'Preenche fornecimento e preço de hoje pra você',
     opt_manual:      '— inserir manualmente abaixo —',
-    label_supply:    'Fornecimento Circulante',
+    label_supply:    'Fornecimento circulante',
     ph_supply:       'ex: 57.940.000.000',
-    hint_supply:     'Total de moedas em circulação',
-    label_current:   'Preço Atual (USD)',
+    hint_supply:     'Moedas em circulação hoje',
+    label_current:   'Preço hoje (USD)',
     ph_current:      'ex: 0,50',
-    hint_current:    'Preço hoje — usado para calcular retorno',
-    label_target:    'Preço Previsto / Alvo (USD)',
+    hint_current:    'Usado no múltiplo e no seu retorno',
+    label_target:    'Preço alvo que alegam (USD)',
     ph_target:       'ex: 10,00',
-    hint_target:     'O preço "pra lua"',
-    label_years:     'Prazo Alegado (anos)',
+    hint_target:     'O número "pra lua"',
+    label_years:     'Até quando (anos)',
     ph_years:        'ex: 5',
-    hint_years:      'Opcional — quanto tempo alegam',
-    label_invest:    'Seu Investimento (USD)',
-    label_rich:      'Sua Meta de "Ficar Rico" (USD)',
+    hint_years:      'Opcional',
+    label_invest:    'Se você puser (USD)',
+    label_rich:      'E "rico" significa (USD)',
     btn_analyze:     'ANALISAR A ALEGAÇÃO',
     report_divider:  'Relatório de Análise',
     verdict_label:   'Veredicto',
@@ -973,24 +1225,43 @@ const T = {
     current_lbl:     'Atual',
     target_lbl:      'Preço alvo',
     exhibits_label:  'Evidências',
-    ex_tag_a: 'Evidência A', ex_a: 'Cap. de Mercado Projetada',
-    ex_tag_b: 'Evidência B', ex_b: 'Multiplicador de Preço Necessário', ex_b_sub: 'a partir do preço atual',
-    ex_tag_c: 'Evidência C', ex_c: 'Seu Retorno Projetado',
-    ex_tag_d: 'Evidência D', ex_d: 'Moedas Compradas',
-    threat_title:    'Nível de Ameaça — Medidor de Ilusão',
-    tick_1: 'Plausível', tick_2: 'Especulativo', tick_3: 'Ambicioso', tick_4: 'Improvável', tick_5: 'Ilusório', tick_6: 'Impossível', tick_7: 'Cósmico',
+    ex_a: 'Cap. de mercado necessária',
+    ex_b: 'Múltiplo de preço', ex_b_sub: 'a partir do preço de hoje',
+    ex_c: 'Seu dinheiro vira',
+    ex_d: 'Moedas que você teria',
+    ruler_title:     'Onde essa cap. de mercado cai',
+    ruler_cap:       'Escala de dinheiro: cada passo vale 10×',
+    ruler_claim:     'Esta alegação',
+    ruler_between:   'Acima de {a}, abaixo de {b}',
+    ruler_under:     'Abaixo de {b}',
+    ruler_beyond:    'Além de tudo o que existe na escala',
+    score_label:     'Nota de ilusão',
+    anc_eth_s:  'Ethereum',
+    anc_btc_s:  'Bitcoin',
+    anc_tot_s:  'Todo o cripto',
+    anc_gold_s: 'Todo o ouro',
+    anc_sp_s:   'S&P 500',
+    anc_stk_s:  'Todas as ações',
+    anc_gdp_s:  'PIB mundial',
+    anc_wlth_s: 'Riqueza humana',
+    gdp_note:        'O PIB mundial é a produção de um ano, não um total acumulado. Ele aparece aqui apenas como referência de escala e fica fora da régua, que compara totais.',
+    share_label:     'Arquivo do caso',
+    btn_copy_link:   'Copiar link deste caso',
+    btn_copy_verdict:'Copiar o veredicto',
+    btn_edit:        'Editar a alegação',
+    copied:          'Copiado',
+    copy_failed:     'Use Ctrl+C para copiar',
     threat_levels:   ['Plausível','Especulativo','Ambicioso','Improvável','Ilusório','Impossível','Cósmico'],
     ev_header_1:     'Arquivo de Evidências — Cap. de Mercado',
     ev_header_2:     'Projetado vs. Pontos de Referência',
     ev_above:        '↑ {r}× ACIMA',
     ev_below:        '↓ {r}× ABAIXO',
-    above_lbl:       'acima de',
-    below_lbl:       'abaixo de',
     sig_1: 'Autorizador', sig_2: 'Data da Análise', sig_3: 'Setor Autorizador',
-    footer_text:     'Dados de fornecimento e preço obtidos da API CoinCap. Apenas para fins educativos. Não é conselho financeiro. Desempenho passado não indica resultados futuros.',
+    footer_text:     'Dados de preço obtidos da API da Binance. Apenas para fins educativos. Não é conselho financeiro. Desempenho passado não indica resultados futuros.',
     live_loading:    'carregando dados de mercado…',
     live_ok:         'dados ao vivo',
     live_error:      'dados ao vivo indisponíveis — usando valores padrão',
+    live_none:       'sem par ao vivo, usando o preço armazenado',
     enter_price:     'insira o preço atual',
     of_supply:       '% do fornecimento',
     mcap_bigger:     '{r}× maior que {name}',
@@ -1048,6 +1319,7 @@ const T = {
     anc_gdp:  'PIB mundial anual',
     anc_wlth: 'Riqueza humana total',
 
+    mag_q_short: ' qua', mag_t_short: ' tri', mag_b_short: ' bi',
     mag_quadrillion: 'quatrilhão',
     mag_trillion:    'trilhão',
     mag_billion:     'bilhão',
@@ -1086,10 +1358,13 @@ function setLang(lang) {
     b.classList.toggle('active', b.dataset.lang === lang)
   );
   applyTranslations();
+  stampDate();   // the month name is not a translation table entry
   // Re-render results if visible and inputs are still valid (skip alert)
   const supply  = parseFloat(document.getElementById('supply').value);
   const targetP = parseFloat(document.getElementById('targetPrice').value);
-  if (document.getElementById('result').style.display !== 'none' && supply && targetP) calculate();
+  if (document.getElementById('result').style.display === 'block' && supply && targetP) calculate({ silent: true });
+  // The collapsed summary holds translated text of its own
+  if (LAST_CASE && !document.getElementById('caseSummary').hidden) collapseForm(LAST_CASE);
 }
 
 // ── Language detection on load ────────────────────────────────
@@ -1162,15 +1437,21 @@ const COINS = {
 // ══════════════════════════════════════════════════════════════
 //  ANCHORS
 // ══════════════════════════════════════════════════════════════
+// `ruler: false` marks a flow rather than a stock. Annual world GDP is output
+// per year; every other reference is an accumulated total. Plotting both on one
+// money axis is a category error, so GDP stays in the evidence table (with a
+// footnote) and off the ruler.
+// `tier` alternates the ruler labels above and below the axis — the anchors are
+// as close as 3.8% apart, which no single row of labels survives.
 const ANCHORS_DEF = [
-  { key: 'anc_eth',  value: 420e9,   logo: 'logos/ethereum.png' },
-  { key: 'anc_btc',  value: 1.9e12,  logo: 'logos/bitcoin.png'  },
-  { key: 'anc_tot',  value: 3.5e12,  icon: '🌐' },
-  { key: 'anc_gold', value: 14e12,   icon: '🥇' },
-  { key: 'anc_sp',   value: 45e12,   icon: '📈' },
-  { key: 'anc_stk',  value: 110e12,  icon: '🏦' },
-  { key: 'anc_gdp',  value: 105e12,  icon: '💼' },
-  { key: 'anc_wlth', value: 454e12,  icon: '🌍' },
+  { key: 'anc_eth',  short: 'anc_eth_s',  value: 420e9,   logo: 'logos/ethereum.png', ruler: true,  tier: 'up'   },
+  { key: 'anc_btc',  short: 'anc_btc_s',  value: 1.9e12,  logo: 'logos/bitcoin.png',  ruler: true,  tier: 'down' },
+  { key: 'anc_tot',  short: 'anc_tot_s',  value: 3.5e12,  icon: '🌐',                 ruler: true,  tier: 'up'   },
+  { key: 'anc_gold', short: 'anc_gold_s', value: 14e12,   icon: '🥇',                 ruler: true,  tier: 'down' },
+  { key: 'anc_sp',   short: 'anc_sp_s',   value: 45e12,   icon: '📈',                 ruler: true,  tier: 'up'   },
+  { key: 'anc_stk',  short: 'anc_stk_s',  value: 110e12,  icon: '🏦',                 ruler: true,  tier: 'down' },
+  { key: 'anc_gdp',  short: 'anc_gdp_s',  value: 105e12,  icon: '💼',                 ruler: false, note: true   },
+  { key: 'anc_wlth', short: 'anc_wlth_s', value: 454e12,  icon: '🌍',                 ruler: true,  tier: 'up'   },
 ];
 
 // ══════════════════════════════════════════════════════════════
@@ -1203,6 +1484,18 @@ function fmt(n) {
   if (n >= 1e9)  return '$' + (n/1e9).toFixed(2)  + ' ' + t('mag_billion');
   if (n >= 1e6)  return '$' + (n/1e6).toFixed(2)  + ' ' + t('mag_million');
   return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+// Compact money for the ruler, where labels sit inches apart: $420B, $1.9T.
+function fmtShort(n) {
+  if (!(n > 0)) return '$0';
+  const u = [[1e15, t('mag_q_short')], [1e12, t('mag_t_short')], [1e9, t('mag_b_short')], [1e6, 'M']];
+  for (const [div, suf] of u) {
+    if (n >= div) {
+      const v = n / div;
+      return '$' + (v >= 100 ? v.toFixed(0) : v.toFixed(v >= 10 ? 0 : 1)) + suf;
+    }
+  }
+  return '$' + Math.round(n).toLocaleString('en-US');
 }
 function fmtPrice(n) {
   if (n >= 1000)      return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -1280,6 +1573,190 @@ function scalePos(mcap) {
 function randCase() { return 'CH-' + Math.floor(10000 + Math.random() * 89999); }
 
 // ══════════════════════════════════════════════════════════════
+//  REALITY RULER
+// ══════════════════════════════════════════════════════════════
+// A pure log axis over money, $1B → $10 quadrillion (7 decades). This is a
+// different instrument from scalePos(): scalePos maps a market cap onto the
+// verdict bands (a judgement), rulerPos maps it onto dollars (a fact).
+const RULER_LO = 9, RULER_HI = 16;
+
+function rulerPos(v) {
+  if (!(v > 0)) return 0;
+  const p = (Math.log10(v) - RULER_LO) / (RULER_HI - RULER_LO) * 100;
+  return Math.max(0.4, Math.min(99.6, p));
+}
+
+// $1B / $10B / … / $10Q, in the active language's short magnitude words.
+function decadeLabel(exp) {
+  const unit = exp >= 15 ? t('mag_q_short') : exp >= 12 ? t('mag_t_short') : t('mag_b_short');
+  const lead = Math.pow(10, exp % 3);
+  return '$' + lead + unit;
+}
+
+function renderRuler(projMcap) {
+  const claimPos = rulerPos(projMcap);
+  let html = '<div class="ruler-claim-line" style="--p:' + claimPos + '%"></div>'
+           + '<div class="ruler-axis"></div>';
+
+  for (let d = RULER_LO; d <= RULER_HI; d++) {
+    const p = (d - RULER_LO) / (RULER_HI - RULER_LO) * 100;
+    html += '<div class="ruler-decade" style="--p:' + p + '%">'
+          + '<i></i><b>' + decadeLabel(d) + '</b></div>';
+  }
+
+  ANCHORS_DEF.forEach(a => {
+    if (!a.ruler) return;
+    const p = rulerPos(a.value);
+    html += '<div class="ruler-anchor ' + a.tier + '" style="--p:' + p + '%">'
+          + '<i></i><u>' + t(a.short) + '<b>' + fmtShort(a.value) + '</b></u></div>';
+  });
+
+  const edge = claimPos < 14 ? 'l' : (claimPos > 86 ? 'r' : '');
+  html += '<div class="ruler-claim" data-edge="' + edge + '" style="--p:' + claimPos + '%">'
+        + '<i></i><u><s>' + t('ruler_claim') + '</s>' + fmtShort(projMcap) + '</u></div>';
+
+  document.getElementById('ruler').innerHTML = html;
+
+  // Plain-language reading: the nearest reference either side of the claim.
+  let below = null, above = null;
+  ANCHORS_DEF.forEach(a => {
+    if (!a.ruler) return;
+    if (a.value <= projMcap && (!below || a.value > below.value)) below = a;
+    if (a.value >  projMcap && (!above || a.value < above.value)) above = a;
+  });
+  const reading = below && above ? tpl('ruler_between', { a: t(below.short), b: t(above.short) })
+                : above          ? tpl('ruler_under',   { b: t(above.short) })
+                :                  t('ruler_beyond');
+  document.getElementById('rulerReading').textContent = reading;
+}
+
+// Verdict ladder — the 0-100 score as seven steps instead of a needle that
+// used to land on top of its own tick label.
+function renderLadder(verdictIndex, score) {
+  const levels = t('threat_levels');
+  document.getElementById('ladder').innerHTML = levels.map((name, i) =>
+    '<span class="' + (i === verdictIndex ? 'on' : i < verdictIndex ? 'past' : '') + '">'
+    + name + '</span>'
+  ).join('');
+  document.getElementById('verdictScore').textContent =
+    t('score_label') + ' ' + Math.round(score) + '/100';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FORM COLLAPSE  /  SHARE
+// ══════════════════════════════════════════════════════════════
+let LAST_CASE = null;   // {coinId, supply, currentP, targetP, years, invest, goal, verdict}
+
+function collapseForm(state) {
+  const coinSel = document.getElementById('coinPreset');
+  const coinName = coinSel.value
+    ? coinSel.options[coinSel.selectedIndex].textContent
+    : t('opt_manual');
+  const arrow = state.currentP > 0
+    ? fmtPrice(state.currentP) + ' → ' + fmtPrice(state.targetP)
+    : fmtPrice(state.targetP);
+  document.getElementById('caseSummaryText').innerHTML =
+    '<b>' + coinName + '</b> &nbsp;·&nbsp; ' + arrow;
+  document.getElementById('claimForm').hidden = true;
+  document.getElementById('caseSummary').hidden = false;
+}
+
+function expandForm() {
+  document.getElementById('claimForm').hidden = false;
+  document.getElementById('caseSummary').hidden = true;
+  document.getElementById('claimForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function caseLink() {
+  if (!LAST_CASE) return location.href;
+  const q = new URLSearchParams();
+  if (LAST_CASE.coinId) q.set('coin', LAST_CASE.coinId);
+  q.set('supply', String(LAST_CASE.supply));
+  if (LAST_CASE.currentP > 0) q.set('price', String(LAST_CASE.currentP));
+  q.set('target', String(LAST_CASE.targetP));
+  if (LAST_CASE.years > 0) q.set('years', String(LAST_CASE.years));
+  q.set('invest', String(LAST_CASE.invest));
+  q.set('goal', String(LAST_CASE.goal));
+  q.set('lang', LANG);
+  return location.origin + location.pathname + '?' + q.toString();
+}
+
+function verdictText() {
+  if (!LAST_CASE) return '';
+  return [
+    t(LAST_CASE.verdictKeys[0]).replace(/^[^A-Za-zÀ-ÿ]+/, ''),
+    document.getElementById('vPriceSummary').textContent,
+    t('ex_a') + ': ' + fmt(LAST_CASE.projMcap),
+    document.getElementById('rulerReading').textContent,
+    document.getElementById('verdictScore').textContent,
+    caseLink()
+  ].join('\n');
+}
+
+// The async clipboard API needs a focused document and a permission the user
+// may have denied, and it is unavailable outside a secure context. execCommand
+// is deprecated but synchronous, asks for nothing, and still works everywhere,
+// so it is the second attempt rather than the message.
+function legacyCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;';
+  document.body.appendChild(ta);
+  ta.select();
+  ta.setSelectionRange(0, text.length);
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  if (ok) { ta.remove(); return true; }
+  // Both paths failed, so the message asks for Ctrl+C. Leave the text selected
+  // for a few seconds, otherwise that instruction copies nothing.
+  setTimeout(() => ta.remove(), 4000);
+  return false;
+}
+
+async function copyToClipboard(text, btn) {
+  const original = btn.dataset.label || btn.textContent;
+  btn.dataset.label = original;
+  let ok = false;
+  try {
+    await navigator.clipboard.writeText(text);
+    ok = true;
+  } catch (e) {
+    ok = legacyCopy(text);
+  }
+  btn.textContent = t(ok ? 'copied' : 'copy_failed');
+  setTimeout(() => { btn.textContent = btn.dataset.label; }, 1600);
+}
+
+function copyCaseLink(btn) { copyToClipboard(caseLink(), btn); }
+function copyVerdict(btn)  { copyToClipboard(verdictText(), btn); }
+
+// Restore a shared case from the query string, then run it.
+function restoreFromUrl() {
+  const q = new URLSearchParams(location.search);
+  if (!q.has('target')) return false;
+  const setMasked = (id, val) => {
+    if (val === null || val === '' || isNaN(parseFloat(val))) return;
+    const el = document.getElementById(id);
+    el.value = val;
+    maskNumber(el);
+  };
+  const coin = q.get('coin');
+  if (coin && COINS[coin]) {
+    document.getElementById('coinPreset').value = coin;
+    document.getElementById('liveBadge').style.visibility = '';
+  }
+  setMasked('supply', q.get('supply'));
+  setMasked('currentPrice', q.get('price'));
+  setMasked('targetPrice', q.get('target'));
+  setMasked('investment', q.get('invest'));
+  setMasked('richGoal', q.get('goal'));
+  const yrs = q.get('years');
+  if (yrs && !isNaN(parseFloat(yrs))) document.getElementById('years').value = yrs;
+  return true;
+}
+
+// ══════════════════════════════════════════════════════════════
 //  MARKET DATA  — Binance API
 // ══════════════════════════════════════════════════════════════
 // Binance USDT pairs for each coin
@@ -1324,25 +1801,22 @@ const BINANCE_SYMBOLS = {
   'fantom':             'FTMUSDT',
   'eos':                'EOSUSDT',
   'dogwifcoin':         'WIFUSDT',
-  'crypto-com-chain':   'CROUSDT',
   'bittensor':          'TAOUSDT',
   'sei-network':        'SEIUSDT',
   'theta-network':      'THETAUSDT',
   'the-sandbox':        'SANDUSDT',
   'gala':               'GALAUSDT',
-  'floki':              '1000FLOKIUSDT',
-  'bonk':               '1000BONKUSDT',
+  'floki':              'FLOKIUSDT',
+  'bonk':               'BONKUSDT',
 };
 
 // Cache of fetched live data per coin (persists for the session)
 let liveData = {};
 
-const KILO_PAIRS = new Set(['1000FLOKIUSDT', '1000BONKUSDT', '1000PEPEUSDT', '1000SHIBUSDT']);
-
 // Fetch a single coin's live data from Binance — called only when a coin is selected
 async function fetchCoinData(coinId) {
   const binanceSymbol = BINANCE_SYMBOLS[coinId];
-  if (!binanceSymbol) return;
+  if (!binanceSymbol) { setBadge('error', t('live_none')); return; }
 
   setBadge('loading', t('live_loading'));
   try {
@@ -1351,9 +1825,8 @@ async function fetchCoinData(coinId) {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const item = await res.json();
 
-    const multiplier = KILO_PAIRS.has(binanceSymbol) ? 0.001 : 1;
     liveData[coinId] = {
-      price:    parseFloat(item.lastPrice) * multiplier,
+      price:    parseFloat(item.lastPrice),
       supply:   COINS[coinId].supply,
       change24: parseFloat(item.priceChangePercent),
     };
@@ -1365,6 +1838,7 @@ async function fetchCoinData(coinId) {
       maskNumber(priceEl);
       setBadge('ok', 'Binance — ' + t('live_ok'));
       updateCoinDisplay();
+      liveRecalc();
     }
   } catch (e) {
     setBadge('error', t('live_error'));
@@ -1420,11 +1894,25 @@ function applyPreset() {
   fetchCoinData(coinId);
 }
 
-function setInvest(v) { const el = document.getElementById('investment'); el.value = v; maskNumber(el); }
+// Live recalculation. Gated on a report already being on screen: the first
+// analysis still goes through the button (which is what may alert on missing
+// fields), and after that every edit updates the report in place.
+function liveRecalc() {
+  if (document.getElementById('result').style.display === 'block') calculate({ silent: true });
+}
+['supply', 'currentPrice', 'targetPrice', 'years', 'investment', 'richGoal'].forEach(id => {
+  document.getElementById(id).addEventListener('input', liveRecalc);
+});
+// The inline onchange runs applyPreset first, so the fields are already filled
+// by the time this listener fires.
+document.getElementById('coinPreset').addEventListener('change', liveRecalc);
+
+function setInvest(v) { const el = document.getElementById('investment'); el.value = v; maskNumber(el); liveRecalc(); }
 function setGoal(v)   {
   const el = document.getElementById('richGoal');
   el.value = v;
   maskNumber(el);
+  liveRecalc();
 }
 
 // ── Case number ───────────────────────────────────────────────
@@ -1432,29 +1920,55 @@ const SESSION_CASE = randCase();
 document.getElementById('caseNum').textContent = 'CASE #' + SESSION_CASE;
 
 // Signature date
-(function stampDate() {
+function stampDate() {
   const now = new Date();
   const day = now.getDate();
-  const suffix = (d => {
-    if (d >= 11 && d <= 13) return 'th';
-    return ['th','st','nd','rd','th','th','th','th','th','th'][d % 10];
-  })(day);
-  const months = ['January','February','March','April','May','June',
-                  'July','August','September','October','November','December'];
   const pad = n => String(n).padStart(2, '0');
-  const dateStr = `${pad(day)}${suffix} ${months[now.getMonth()]}, ${now.getFullYear()}`;
+  let dateStr;
+  if (LANG === 'pt') {
+    const meses = ['janeiro','fevereiro','março','abril','maio','junho',
+                   'julho','agosto','setembro','outubro','novembro','dezembro'];
+    dateStr = `${pad(day)} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+  } else {
+    const suffix = (d => {
+      if (d >= 11 && d <= 13) return 'th';
+      return ['th','st','nd','rd','th','th','th','th','th','th'][d % 10];
+    })(day);
+    const months = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    dateStr = `${pad(day)}${suffix} ${months[now.getMonth()]}, ${now.getFullYear()}`;
+  }
   const el = document.getElementById('sigDate');
   if (el) el.textContent = dateStr;
   const sector = document.getElementById('sigSector');
   if (sector) sector.textContent = 'CH-' + now.getFullYear();
-})();
+}
+stampDate();
 
 // Live data is fetched on demand when a coin is selected (see applyPreset → fetchCoinData)
+
+// A link shared from the Case file row carries the whole claim in the query
+// string; restoring it and running the analysis is what makes the link useful.
+(function initFromUrl() {
+  const langParam = new URLSearchParams(location.search).get('lang');
+  if (langParam === 'pt' || langParam === 'en') { LANG = langParam; }
+  document.querySelectorAll('.lang-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === LANG));
+  applyTranslations();
+  stampDate();   // ?lang= lands after the first stamp, and the month is not
+                 // a translation table entry, so it has to be redrawn here
+  if (restoreFromUrl()) {
+    calculate();
+    const coin = document.getElementById('coinPreset').value;
+    if (coin) fetchCoinData(coin);   // refresh the price behind the restored case
+  }
+})();
 
 // ══════════════════════════════════════════════════════════════
 //  CALCULATE
 // ══════════════════════════════════════════════════════════════
-function calculate() {
+function calculate(opts) {
+  const silent = !!(opts && opts.silent);
   const stripMask = id => parseFloat(document.getElementById(id).value.replace(/,/g, ''));
   const supply   = stripMask('supply');
   const currentP = stripMask('currentPrice');
@@ -1464,6 +1978,7 @@ function calculate() {
   const years    = parseFloat(document.getElementById('years').value);
 
   if (!supply || !targetP) {
+    if (silent) return;
     alert(LANG === 'pt'
       ? 'Por favor, preencha ao menos o Fornecimento Circulante e o Preço Alvo.'
       : 'Please fill in at least Circulating Supply and Predicted Price.');
@@ -1491,7 +2006,9 @@ function calculate() {
   stamp.className = 'stamp ' + vd.stampCls;
   stamp.textContent = t(vd.keys[2]);
   void stamp.offsetWidth;
-  stamp.classList.add('show');
+  // Replaying the thud on every keystroke would be unreadable, so a silent
+  // re-render only reveals the stamp.
+  stamp.classList.add(silent ? 'shown' : 'show');
 
   // Price summary
   const priceSummary = currentP > 0
@@ -1531,12 +2048,13 @@ function calculate() {
     document.getElementById('eCoinsCmp').textContent = t('enter_price');
   }
 
-  // ── Threat needle ────────────────────────────────────────
+  // ── Reality ruler + verdict ladder ───────────────────────
   const pos = scalePos(projMcap);
-  document.getElementById('threatNeedle').style.left = pos + '%';
-  const levels = t('threat_levels');
-  const li = VERDICT_DEFS.indexOf(vd); // index matches threat_levels order
-  document.getElementById('threatReading').textContent = levels[li] + ' — ' + pos.toFixed(0) + '/100';
+  const li  = VERDICT_DEFS.indexOf(vd); // index matches threat_levels order
+  renderRuler(projMcap);
+  renderLadder(li, pos);
+  document.getElementById('ladder').style.color = getComputedStyle(
+    document.getElementById('verdictStamp')).color;
 
   // ── Evidence rows ────────────────────────────────────────
   let eHtml = '';
@@ -1550,13 +2068,14 @@ function calculate() {
     eHtml += `
       <div class="evidence-row">
         ${iconHtml}
-        <span class="ev-name">${t(a.key)}</span>
+        <span class="ev-name">${t(a.key)}${a.note ? '<sup>&dagger;</sup>' : ''}</span>
         <span class="ev-val">${fmt(a.value)}</span>
         <span class="ev-badge ${above ? 'ev-above' : 'ev-below'}">
           ${tpl(badgeTpl, { r: r.toFixed(1) })}
         </span>
       </div>`;
   });
+  eHtml += `<div class="evidence-note">${t('gdp_note')}</div>`;
   document.getElementById('evidenceRows').innerHTML = eHtml;
 
   // ── Case Notes ───────────────────────────────────────────
@@ -1650,10 +2169,23 @@ function calculate() {
     }
   });
 
+  // ── Remember this case so it can be shared or reopened ───
+  LAST_CASE = {
+    coinId:      document.getElementById('coinPreset').value,
+    supply, currentP, targetP, invest,
+    goal:        richGoal,
+    years:       isNaN(years) ? 0 : years,
+    projMcap,
+    verdictKeys: vd.keys,
+  };
+
   // ── Show ─────────────────────────────────────────────────
   const res = document.getElementById('result');
   res.style.display = 'block';
-  setTimeout(() => res.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
+  if (!silent) {
+    collapseForm(LAST_CASE);
+    setTimeout(() => res.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
+  }
 }
 </script>
 
@@ -1704,6 +2236,88 @@ function runTests() {
   assert('verdict/bar aligned: 5T verdict=Unlikely zone=4',
     getVerdict(5e12).keys[0] === 'v_unl_title' && scalePos(5e12) >= 38 && scalePos(5e12) <= 54);
 
+  // ── rulerPos (pure log axis, distinct from scalePos) ──────
+  results.push('\nrulerPos:');
+  assert('$1B  → 0% (left edge)',   Math.abs(rulerPos(1e9)  -   0.4) < 0.5, rulerPos(1e9).toFixed(2));
+  assert('$10Q → 100% (right edge)',Math.abs(rulerPos(1e16) -  99.6) < 0.5, rulerPos(1e16).toFixed(2));
+  assert('each decade is 1/7 of the axis',
+    Math.abs((rulerPos(1e13) - rulerPos(1e12)) - 100/7) < 0.01,
+    (rulerPos(1e13) - rulerPos(1e12)).toFixed(3));
+  assert('10x apart is the same distance anywhere on the axis',
+    Math.abs((rulerPos(1e11) - rulerPos(1e10)) - (rulerPos(1e15) - rulerPos(1e14))) < 0.01);
+  assert('monotonic', rulerPos(4.2e11) < rulerPos(1.9e12) && rulerPos(1.9e12) < rulerPos(454e12));
+  assert('clamps below range',  rulerPos(1)    === 0.4);
+  assert('clamps above range',  rulerPos(1e20) === 99.6);
+  assert('rejects zero/negative', rulerPos(0) === 0 && rulerPos(-5) === 0);
+
+  // ── Ruler anchors ─────────────────────────────────────────
+  results.push('\nruler anchors:');
+  const onRuler = ANCHORS_DEF.filter(a => a.ruler);
+  assert('annual world GDP is a flow, so it is off the ruler',
+    ANCHORS_DEF.find(a => a.key === 'anc_gdp').ruler === false);
+  assert('the flow reference is footnoted',
+    ANCHORS_DEF.find(a => a.key === 'anc_gdp').note === true);
+  assert('every ruler anchor has a tier', onRuler.every(a => a.tier === 'up' || a.tier === 'down'));
+  assert('every anchor has a short label that resolves',
+    ANCHORS_DEF.every(a => a.short && T.en[a.short] && T.pt[a.short]));
+  assert('tiers alternate, so no two same-tier labels sit closer than 9%',
+    ['up','down'].every(tier => {
+      const ps = onRuler.filter(a => a.tier === tier).map(a => rulerPos(a.value)).sort((x,y) => x-y);
+      return ps.every((p, i) => i === 0 || p - ps[i-1] >= 9);
+    }));
+  assert('all ruler anchors fall inside the axis range',
+    onRuler.every(a => a.value >= Math.pow(10, RULER_LO) && a.value <= Math.pow(10, RULER_HI)));
+
+  // ── fmtShort ──────────────────────────────────────────────
+  // fmtShort renders the active language's magnitude words, so pin the
+  // language rather than asserting against whatever the page is showing.
+  results.push('\nfmtShort:');
+  const langBefore = LANG;
+  LANG = 'en';
+  assert('en 420B → $420B',   fmtShort(420e9)  === '$420B',  fmtShort(420e9));
+  assert('en 1.9T → $1.9T',   fmtShort(1.9e12) === '$1.9T',  fmtShort(1.9e12));
+  assert('en 454T → $454T',   fmtShort(454e12) === '$454T',  fmtShort(454e12));
+  assert('en 14T  → $14T',    fmtShort(14e12)  === '$14T',   fmtShort(14e12));
+  LANG = 'pt';
+  assert('pt units take a space', fmtShort(1.9e12) === '$1.9 tri', fmtShort(1.9e12));
+  assert('pt 420B → $420 bi',     fmtShort(420e9)  === '$420 bi', fmtShort(420e9));
+  LANG = langBefore;
+  assert('0 → $0',         fmtShort(0)      === '$0');
+
+  // ── i18n parity ───────────────────────────────────────────
+  results.push('\ni18n:');
+  assert('pt defines every key en defines',
+    Object.keys(T.en).every(k => T.pt[k] !== undefined),
+    Object.keys(T.en).filter(k => T.pt[k] === undefined));
+  assert('threat_levels has 7 entries in both',
+    T.en.threat_levels.length === 7 && T.pt.threat_levels.length === 7);
+  assert('one ladder rung per verdict', T.en.threat_levels.length === VERDICT_DEFS.length);
+  assert('en defines every key pt defines',
+    Object.keys(T.pt).every(k => T.en[k] !== undefined),
+    Object.keys(T.pt).filter(k => T.en[k] === undefined));
+  // Every key must be reachable: named by a data-i18n* attribute, or quoted
+  // somewhere in the page's own script. Definitions inside T are unquoted
+  // (`label_preset:`), so only real uses (`t('label_preset')`) match.
+  const inDom = new Set();
+  document.querySelectorAll('[data-i18n],[data-i18n-html],[data-i18n-ph]').forEach(el => {
+    ['i18n', 'i18nHtml', 'i18nPh'].forEach(k => { if (el.dataset[k]) inDom.add(el.dataset[k]); });
+  });
+  const js = [...document.scripts].map(sc => sc.textContent).join('\n');
+  const dead = Object.keys(T.en).filter(k =>
+    !inDom.has(k) && !new RegExp("['\"]" + k + "['\"]").test(js));
+  assert('no unreachable i18n keys', dead.length === 0, dead);
+
+  // ── Accessibility ─────────────────────────────────────────
+  results.push('\naccessibility:');
+  const focusable = document.querySelectorAll('.pill');
+  assert('every quick-pick is a real button',
+    [...focusable].every(el => el.tagName === 'BUTTON'),
+    [...focusable].filter(el => el.tagName !== 'BUTTON').length + ' non-buttons');
+  const labels = [...document.querySelectorAll('#claimForm label')];
+  assert('every field label targets its control',
+    labels.every(l => l.htmlFor && document.getElementById(l.htmlFor)),
+    labels.filter(l => !l.htmlFor || !document.getElementById(l.htmlFor)).map(l => l.textContent));
+
   // ── fmt ───────────────────────────────────────────────────
   results.push('\nfmt:');
   assert('fmt 1B → $1.00 Billion',  fmt(1e9).includes('1.00'));
@@ -1739,6 +2353,14 @@ function runTests() {
   results.push('\nCOINS:');
   assert('all BINANCE_SYMBOLS keys exist in COINS',
     Object.keys(BINANCE_SYMBOLS).every(id => COINS[id] !== undefined));
+  // Binance spot has no 1000-prefixed pairs — those are futures symbols, and
+  // mapping one here fails every request for that coin.
+  assert('no futures-style 1000x symbols',
+    Object.values(BINANCE_SYMBOLS).every(sym => !/^1000/.test(sym)),
+    Object.values(BINANCE_SYMBOLS).filter(sym => /^1000/.test(sym)));
+  assert('coins without a Binance pair still have a fallback price',
+    Object.keys(COINS).filter(id => !BINANCE_SYMBOLS[id]).every(id => COINS[id].fallbackPrice > 0),
+    Object.keys(COINS).filter(id => !BINANCE_SYMBOLS[id] && !(COINS[id].fallbackPrice > 0)));
   assert('all COINS have supply > 0',
     Object.values(COINS).every(c => c.supply > 0));
   assert('all COINS have fallbackPrice > 0',
@@ -1774,8 +2396,7 @@ async function runApiTests(delayMs = 300) {
         row = { coinId, symbol, status: 'FAIL', price: null, ms, error: `HTTP ${res.status}` };
       } else {
         const data       = await res.json();
-        const multiplier = KILO_PAIRS.has(symbol) ? 0.001 : 1;
-        const price      = parseFloat(data.price) * multiplier;
+        const price      = parseFloat(data.price);
         row = { coinId, symbol, status: 'OK', price, ms, error: null };
       }
     } catch (e) {

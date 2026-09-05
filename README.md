@@ -13,9 +13,12 @@ This tool calculates:
 - **Your projected return** on a given investment
 - **Required CAGR** if a timeframe is given — how fast would the price need to grow each year?
 - **Opportunity cost** — what would the same money earn in an S&P 500 index fund?
-- **Delusion score** on a visual meter
+- **Where that market cap lands** on a log-scale money ruler, from $1B to $10 quadrillion, with real reference points marked on it
+- **Delusion score** on a seven-step verdict ladder
 
 The verdict scale runs: Plausible → Speculative → Ambitious → Unlikely → Delusional → Mathematically Impossible → Cosmic Delusion.
+
+Annual world GDP appears in the reference table but not on the ruler. GDP is output per year; every other reference is an accumulated total, and plotting a flow against stocks on one money axis compares two different things.
 
 ## Why it exists
 
@@ -39,6 +42,7 @@ Live price data is fetched from the Binance API when a coin is selected. All oth
 - Supply values are approximate; verify current figures on CoinGecko before drawing serious conclusions
 - Reference point values (Bitcoin mcap, total gold, etc.) are approximate order-of-magnitude anchors
 - Available in English and Brazilian Portuguese (auto-detected from browser language)
+- Every analysis can be shared as a link: the coin, supply, price, target, timeframe and language travel in the query string, and opening the link re-runs the case
 - Developer utilities: open the browser console and run `runTests()` for unit tests, `runApiTests()` to verify all Binance pairs
 
 ## Status
