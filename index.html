@@ -1934,6 +1934,8 @@ stampDate();
   document.querySelectorAll('.lang-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.lang === LANG));
   applyTranslations();
+  stampDate();   // ?lang= lands after the first stamp, and the month is not
+                 // a translation table entry, so it has to be redrawn here
   if (restoreFromUrl()) {
     calculate();
     const coin = document.getElementById('coinPreset').value;
