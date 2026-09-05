@@ -1122,6 +1122,7 @@ const T = {
     live_loading:    'loading market data…',
     live_ok:         'live data',
     live_error:      'live data unavailable — using presets',
+    live_none:       'no live pair — using the stored price',
     enter_price:     'enter current price',
     of_supply:       '% of supply',
     mcap_bigger:     '{r}× bigger than {name}',
@@ -1260,6 +1261,7 @@ const T = {
     live_loading:    'carregando dados de mercado…',
     live_ok:         'dados ao vivo',
     live_error:      'dados ao vivo indisponíveis — usando valores padrão',
+    live_none:       'sem par ao vivo, usando o preço armazenado',
     enter_price:     'insira o preço atual',
     of_supply:       '% do fornecimento',
     mcap_bigger:     '{r}× maior que {name}',
@@ -1776,25 +1778,22 @@ const BINANCE_SYMBOLS = {
   'fantom':             'FTMUSDT',
   'eos':                'EOSUSDT',
   'dogwifcoin':         'WIFUSDT',
-  'crypto-com-chain':   'CROUSDT',
   'bittensor':          'TAOUSDT',
   'sei-network':        'SEIUSDT',
   'theta-network':      'THETAUSDT',
   'the-sandbox':        'SANDUSDT',
   'gala':               'GALAUSDT',
-  'floki':              '1000FLOKIUSDT',
-  'bonk':               '1000BONKUSDT',
+  'floki':              'FLOKIUSDT',
+  'bonk':               'BONKUSDT',
 };
 
 // Cache of fetched live data per coin (persists for the session)
 let liveData = {};
 
-const KILO_PAIRS = new Set(['1000FLOKIUSDT', '1000BONKUSDT', '1000PEPEUSDT', '1000SHIBUSDT']);
-
 // Fetch a single coin's live data from Binance — called only when a coin is selected
 async function fetchCoinData(coinId) {
   const binanceSymbol = BINANCE_SYMBOLS[coinId];
-  if (!binanceSymbol) return;
+  if (!binanceSymbol) { setBadge('error', t('live_none')); return; }
 
   setBadge('loading', t('live_loading'));
   try {
@@ -1803,9 +1802,8 @@ async function fetchCoinData(coinId) {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const item = await res.json();
 
-    const multiplier = KILO_PAIRS.has(binanceSymbol) ? 0.001 : 1;
     liveData[coinId] = {
-      price:    parseFloat(item.lastPrice) * multiplier,
+      price:    parseFloat(item.lastPrice),
       supply:   COINS[coinId].supply,
       change24: parseFloat(item.priceChangePercent),
     };
@@ -2332,6 +2330,14 @@ function runTests() {
   results.push('\nCOINS:');
   assert('all BINANCE_SYMBOLS keys exist in COINS',
     Object.keys(BINANCE_SYMBOLS).every(id => COINS[id] !== undefined));
+  // Binance spot has no 1000-prefixed pairs — those are futures symbols, and
+  // mapping one here fails every request for that coin.
+  assert('no futures-style 1000x symbols',
+    Object.values(BINANCE_SYMBOLS).every(sym => !/^1000/.test(sym)),
+    Object.values(BINANCE_SYMBOLS).filter(sym => /^1000/.test(sym)));
+  assert('coins without a Binance pair still have a fallback price',
+    Object.keys(COINS).filter(id => !BINANCE_SYMBOLS[id]).every(id => COINS[id].fallbackPrice > 0),
+    Object.keys(COINS).filter(id => !BINANCE_SYMBOLS[id] && !(COINS[id].fallbackPrice > 0)));
   assert('all COINS have supply > 0',
     Object.values(COINS).every(c => c.supply > 0));
   assert('all COINS have fallbackPrice > 0',
@@ -2367,8 +2373,7 @@ async function runApiTests(delayMs = 300) {
         row = { coinId, symbol, status: 'FAIL', price: null, ms, error: `HTTP ${res.status}` };
       } else {
         const data       = await res.json();
-        const multiplier = KILO_PAIRS.has(symbol) ? 0.001 : 1;
-        const price      = parseFloat(data.price) * multiplier;
+        const price      = parseFloat(data.price);
         row = { coinId, symbol, status: 'OK', price, ms, error: null };
       }
     } catch (e) {
