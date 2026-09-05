@@ -1141,17 +1141,23 @@ const T = {
     v_del_sub:       'Would require this coin to exceed the value of all gold ever mined on Earth. Extraordinary claims require extraordinary evidence — and none exists for this scenario.',
     v_del_stamp:     'DELUSIONAL',
     v_unl_title:     '🟠 EXTREMELY UNLIKELY',
-    v_unl_sub:       'Would require surpassing the entire current crypto market by a wide margin. While theoretically possible in a decade-long bull run, the probability is very low.',
     v_unl_stamp:     'UNLIKELY',
     v_amb_title:     '🟡 VERY AMBITIOUS',
-    v_amb_sub:       'Would require flipping Bitcoin as the dominant crypto asset. Only Bitcoin has historically sustained this level. Treat with serious skepticism.',
+    v_amb_sub:       'This would put a single coin above the entire crypto market as it stands today. Only a handful of assets on Earth are worth that much.',
     v_amb_stamp:     'AMBITIOUS',
     v_spe_title:     '🟡 SPECULATIVE',
-    v_spe_sub:       'Would require becoming a top-two crypto asset. Possible for fundamentally strong projects in a bull market, but far from guaranteed.',
     v_spe_stamp:     'SPECULATIVE',
     v_pla_title:     '🟢 PLAUSIBLE',
-    v_pla_sub:       'The math stays within the range of existing large-cap crypto assets. Still highly speculative, but not delusional by market cap alone.',
+    v_pla_sub:       'Neither the jump from today\u2019s price nor the money this would take is out of line with assets that already exist. Still speculative, but the arithmetic is not what makes it so.',
     v_pla_stamp:     'PLAUSIBLE',
+    // Used when the leap from today's price, not the absolute size, is what
+    // makes the claim implausible. The ceiling copy above names a reference
+    // point; these name the move.
+    v_leap_sub_1:    'That is {x} the price today. Multiples like this do happen in a strong bull market, but they are the exception, and they do not arrive on schedule.',
+    v_leap_sub_2:    'That is {x} the price today. Holding a climb that size takes years of compounding at rates almost nothing sustains, or a mania, which ends the way manias end.',
+    v_leap_sub_3:    'That is {x} the price today. Very little multiplies that much from a standing start, and what did was far smaller when it began.',
+    v_leap_sub_4:    'That is {x} the price today. Returns of this order are the ones people are shown after the fact, on the one coin out of thousands that survived to be screenshotted.',
+    v_size_only:     'No current price was given, so this verdict rests on the projected size alone.',
 
     // Case notes
     notes_header:    'Case Notes — Time & Return Analysis',
@@ -1279,17 +1285,20 @@ const T = {
     v_del_sub:       'Exigiria que esta moeda superasse o valor de todo o ouro já extraído na Terra. Alegações extraordinárias exigem evidências extraordinárias — e nenhuma existe para este cenário.',
     v_del_stamp:     'ILUSÓRIO',
     v_unl_title:     '🟠 EXTREMAMENTE IMPROVÁVEL',
-    v_unl_sub:       'Exigiria superar todo o mercado cripto atual por uma ampla margem. Embora teoricamente possível em uma bull run de décadas, a probabilidade é muito baixa.',
     v_unl_stamp:     'IMPROVÁVEL',
     v_amb_title:     '🟡 MUITO AMBICIOSO',
-    v_amb_sub:       'Exigiria superar o Bitcoin como ativo cripto dominante. Apenas o Bitcoin sustentou historicamente esse nível. Trate com ceticismo sério.',
+    v_amb_sub:       'Isso colocaria uma moeda sozinha acima de todo o mercado cripto de hoje. Pouquíssimos ativos no planeta valem tanto.',
     v_amb_stamp:     'AMBICIOSO',
     v_spe_title:     '🟡 ESPECULATIVO',
-    v_spe_sub:       'Exigiria se tornar um dos dois maiores ativos cripto. Possível para projetos fundamentalmente sólidos em um mercado em alta, mas longe de ser garantido.',
     v_spe_stamp:     'ESPECULATIVO',
     v_pla_title:     '🟢 PLAUSÍVEL',
-    v_pla_sub:       'A matemática permanece dentro do intervalo dos grandes ativos cripto existentes. Ainda altamente especulativo, mas não delusional apenas pela cap. de mercado.',
+    v_pla_sub:       'Nem o salto a partir do preço de hoje nem o dinheiro que isso exigiria destoam de ativos que já existem. Continua especulativo, mas não é a aritmética que o torna assim.',
     v_pla_stamp:     'PLAUSÍVEL',
+    v_leap_sub_1:    'Isso é {x} o preço de hoje. Múltiplos assim acontecem em mercado de alta forte, mas são a exceção, e não chegam na data marcada.',
+    v_leap_sub_2:    'Isso é {x} o preço de hoje. Sustentar uma subida desse tamanho exige anos compondo a taxas que quase nada mantém, ou uma mania, que termina como manias terminam.',
+    v_leap_sub_3:    'Isso é {x} o preço de hoje. Pouquíssima coisa multiplica tanto assim partindo do zero, e o que multiplicou era muito menor quando começou.',
+    v_leap_sub_4:    'Isso é {x} o preço de hoje. Retornos dessa ordem são os que mostram depois do fato, na única moeda entre milhares que sobreviveu para virar print.',
+    v_size_only:     'Nenhum preço atual foi informado, então este veredicto se apoia apenas no tamanho projetado.',
 
     notes_header:    'Notas do Caso — Análise de Tempo e Retorno',
     cagr_row:        'CAGR necessário para atingir a meta em {y} anos',
@@ -1458,21 +1467,96 @@ const ANCHORS_DEF = [
 //  VERDICTS
 // ══════════════════════════════════════════════════════════════
 // Ordered LOW → HIGH: return the first entry whose threshold is >= mcap
+// Two independent things can make a claim implausible, and judging on only
+// one of them is wrong in both directions:
+//
+//   the leap     how far the price has to move from where it is today
+//   the ceiling  how much money the claim implies in absolute terms
+//
+// This used to score the ceiling alone. Bitcoin at $79,753 "reaching" $80,000
+// projects $1.58T, which read as SPECULATIVE — but the move is 1.003x and the
+// asset is already worth that. The mirror case is worse: a coin at $0.0000001
+// claiming $1 needs a 10,000,000x move and projects only $100B, which read as
+// PLAUSIBLE. The verdict is now the worse of the two readings.
+//
+// keys is [title, ceiling-sub, stamp]. The ceiling-sub is null at the two
+// indices the ceiling can never produce; those are reachable only through the
+// leap, which brings its own copy.
 const VERDICT_DEFS = [
-  { mcapThreshold: 420e9,    cls: 'vb-green',  stampCls: 'stamp-green',  keys: ['v_pla_title','v_pla_sub','v_pla_stamp'] },
-  { mcapThreshold: 1.9e12,   cls: 'vb-amber',  stampCls: 'stamp-amber',  keys: ['v_spe_title','v_spe_sub','v_spe_stamp'] },
-  { mcapThreshold: 3.5e12,   cls: 'vb-amber',  stampCls: 'stamp-amber',  keys: ['v_amb_title','v_amb_sub','v_amb_stamp'] },
-  { mcapThreshold: 14e12,    cls: 'vb-orange', stampCls: 'stamp-orange', keys: ['v_unl_title','v_unl_sub','v_unl_stamp'] },
-  { mcapThreshold: 110e12,   cls: 'vb-red',    stampCls: 'stamp-red',    keys: ['v_del_title','v_del_sub','v_del_stamp'] },
-  { mcapThreshold: 454e12,   cls: 'vb-red',    stampCls: 'stamp-red',    keys: ['v_math_title','v_math_sub','v_math_stamp'] },
-  { mcapThreshold: Infinity, cls: 'vb-purple', stampCls: 'stamp-purple', keys: ['v_cosmic_title','v_cosmic_sub','v_cosmic_stamp'] },
+  { cls: 'vb-green',  stampCls: 'stamp-green',  keys: ['v_pla_title',    'v_pla_sub',    'v_pla_stamp'] },
+  { cls: 'vb-amber',  stampCls: 'stamp-amber',  keys: ['v_spe_title',    null,           'v_spe_stamp'] },
+  { cls: 'vb-amber',  stampCls: 'stamp-amber',  keys: ['v_amb_title',    'v_amb_sub',    'v_amb_stamp'] },
+  { cls: 'vb-orange', stampCls: 'stamp-orange', keys: ['v_unl_title',    null,           'v_unl_stamp'] },
+  { cls: 'vb-red',    stampCls: 'stamp-red',    keys: ['v_del_title',    'v_del_sub',    'v_del_stamp'] },
+  { cls: 'vb-red',    stampCls: 'stamp-red',    keys: ['v_math_title',   'v_math_sub',   'v_math_stamp'] },
+  { cls: 'vb-purple', stampCls: 'stamp-purple', keys: ['v_cosmic_title', 'v_cosmic_sub', 'v_cosmic_stamp'] },
 ];
 
-function getVerdict(mcap) {
-  for (const v of VERDICT_DEFS) {
-    if (mcap <= v.mcapThreshold) return v;
+// The leap tops out at "delusional". However large, a multiple is never
+// *mathematically* impossible — only the ceiling can say that.
+const LEAP_BANDS = [
+  { max: 2,        index: 0 },
+  { max: 5,        index: 1 },
+  { max: 25,       index: 2 },
+  { max: 100,      index: 3 },
+  { max: Infinity, index: 4 },
+];
+
+// The ceiling stays silent until the claim outgrows the whole asset class:
+// below that, absolute size says nothing about whether the claim is sane.
+// Each step is a real reference point, and the copy at that index names it.
+const CAP_BANDS = [
+  { max: 3.5e12,   index: 0 },  // inside today's crypto market — no penalty
+  { max: 14e12,    index: 2 },  // more than the whole crypto market
+  { max: 110e12,   index: 4 },  // more than all the gold ever mined
+  { max: 454e12,   index: 5 },  // more than every stock market combined
+  { max: Infinity, index: 6 },  // more than all human wealth
+];
+
+// Where a value falls inside its band, on a log scale, as 0..1. That fraction
+// is what turns seven steps into a 0-100 score.
+function bandPos(bands, value, floor) {
+  let lo = floor;
+  for (const b of bands) {
+    if (value <= b.max) {
+      const hi = isFinite(b.max) ? b.max : lo * 1000;
+      const t  = (Math.log10(Math.max(value, lo)) - Math.log10(lo)) /
+                 (Math.log10(hi) - Math.log10(lo));
+      return { index: b.index, frac: Math.max(0, Math.min(1, t)) };
+    }
+    lo = b.max;
   }
-  return VERDICT_DEFS[VERDICT_DEFS.length - 1];
+  const last = bands[bands.length - 1];
+  return { index: last.index, frac: 1 };
+}
+
+// multiplier is null when no current price was given: the leap is unknowable,
+// so the ceiling decides alone and the report says the verdict rests on size.
+function getVerdict(projMcap, multiplier) {
+  const cap  = bandPos(CAP_BANDS, projMcap, 1e8);
+  const leap = (multiplier > 0) ? bandPos(LEAP_BANDS, multiplier, 1) : null;
+  const leapWins = leap && (leap.index > cap.index ||
+                           (leap.index === cap.index && leap.frac > cap.frac));
+  const win = leapWins ? leap : cap;
+  return {
+    def:    VERDICT_DEFS[win.index],
+    index:  win.index,
+    reason: leapWins ? 'leap' : 'cap',
+    score:  Math.round(Math.max(2, Math.min(98, (win.index + win.frac) / 7 * 100))),
+  };
+}
+
+// Index 0 is always the plausible copy, whichever axis produced it: there is
+// nothing to explain when neither reading objects.
+const LEAP_SUBS = [null, 'v_leap_sub_1', 'v_leap_sub_2', 'v_leap_sub_3', 'v_leap_sub_4', null, null];
+
+function verdictSub(vd, multiplier) {
+  const leapKey = LEAP_SUBS[vd.index];
+  if (vd.index > 0 && vd.reason === 'leap' && leapKey) {
+    return tpl(leapKey, { x: fmtX(multiplier) });
+  }
+  const base = t(vd.def.keys[1]);
+  return (multiplier > 0) ? base : base + ' ' + t('v_size_only');
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1505,8 +1589,11 @@ function fmtPrice(n) {
   return '$' + n.toExponential(4);
 }
 function fmtX(n) {
+  if (n >= 1e12) return (n/1e12).toFixed(1) + 'T×';
+  if (n >= 1e9)  return (n/1e9).toFixed(1)  + 'B×';
   if (n >= 1e6)  return (n/1e6).toFixed(1)  + 'M×';
   if (n >= 1000) return (n/1000).toFixed(1) + 'k×';
+  if (n > 0 && n < 0.1) return Number(n.toPrecision(2)) + '×';
   return n.toFixed(1) + '×';
 }
 function fmtSupply(n) {
@@ -1549,34 +1636,13 @@ function maskNumber(el) {
   }
   el.setSelectionRange(newPos, newPos);
 }
-// Piecewise log scale: 7 zones matching all 7 VERDICT_DEFS thresholds exactly
-// Zone boundaries align with: Plausible|Speculative|Ambitious|Unlikely|Delusional|Impossible|Cosmic
-function scalePos(mcap) {
-  const zones = [
-    { lo: 1e8,    hi: 420e9,   posLo: 2,  posHi: 14 },  // Plausible
-    { lo: 420e9,  hi: 1.9e12,  posLo: 14, posHi: 26 },  // Speculative
-    { lo: 1.9e12, hi: 3.5e12,  posLo: 26, posHi: 38 },  // Ambitious
-    { lo: 3.5e12, hi: 14e12,   posLo: 38, posHi: 54 },  // Unlikely
-    { lo: 14e12,  hi: 110e12,  posLo: 54, posHi: 68 },  // Delusional
-    { lo: 110e12, hi: 454e12,  posLo: 68, posHi: 82 },  // Impossible
-    { lo: 454e12, hi: 5e15,    posLo: 82, posHi: 97 },  // Cosmic
-  ];
-  const clamped = Math.max(1e8, Math.min(mcap, 5e15));
-  for (const z of zones) {
-    if (clamped <= z.hi) {
-      const t = (Math.log10(clamped) - Math.log10(z.lo)) / (Math.log10(z.hi) - Math.log10(z.lo));
-      return z.posLo + Math.max(0, Math.min(1, t)) * (z.posHi - z.posLo);
-    }
-  }
-  return 96;
-}
 function randCase() { return 'CH-' + Math.floor(10000 + Math.random() * 89999); }
 
 // ══════════════════════════════════════════════════════════════
 //  REALITY RULER
 // ══════════════════════════════════════════════════════════════
 // A pure log axis over money, $1B → $10 quadrillion (7 decades). This is a
-// different instrument from scalePos(): scalePos maps a market cap onto the
+// different instrument from the verdict score: that one grades a claim, the
 // verdict bands (a judgement), rulerPos maps it onto dollars (a fact).
 const RULER_LO = 9, RULER_HI = 16;
 
@@ -1992,19 +2058,19 @@ function calculate(opts) {
   const returnMult  = returnValue ? returnValue / invest  : null;
 
   // ── Verdict ─────────────────────────────────────────────
-  const vd = getVerdict(projMcap);
+  const vd = getVerdict(projMcap, multiplier);
   const vBody = document.getElementById('verdictBody');
-  vBody.className = 'verdict-body ' + vd.cls;
-  document.getElementById('verdictTitle').textContent = t(vd.keys[0]);
-  document.getElementById('verdictSub').textContent   = t(vd.keys[1]);
+  vBody.className = 'verdict-body ' + vd.def.cls;
+  document.getElementById('verdictTitle').textContent = t(vd.def.keys[0]);
+  document.getElementById('verdictSub').textContent   = verdictSub(vd, multiplier);
   document.getElementById('vCaseNum').textContent     = SESSION_CASE;
 
   const stamp = document.getElementById('verdictStamp');
   stamp.className = 'stamp'; // reset — remove previous color class and 'show'
   stamp.textContent = '';
   void stamp.offsetWidth;   // force reflow before re-applying
-  stamp.className = 'stamp ' + vd.stampCls;
-  stamp.textContent = t(vd.keys[2]);
+  stamp.className = 'stamp ' + vd.def.stampCls;
+  stamp.textContent = t(vd.def.keys[2]);
   void stamp.offsetWidth;
   // Replaying the thud on every keystroke would be unreadable, so a silent
   // re-render only reveals the stamp.
@@ -2049,10 +2115,8 @@ function calculate(opts) {
   }
 
   // ── Reality ruler + verdict ladder ───────────────────────
-  const pos = scalePos(projMcap);
-  const li  = VERDICT_DEFS.indexOf(vd); // index matches threat_levels order
   renderRuler(projMcap);
-  renderLadder(li, pos);
+  renderLadder(vd.index, vd.score);
   document.getElementById('ladder').style.color = getComputedStyle(
     document.getElementById('verdictStamp')).color;
 
@@ -2176,7 +2240,7 @@ function calculate(opts) {
     goal:        richGoal,
     years:       isNaN(years) ? 0 : years,
     projMcap,
-    verdictKeys: vd.keys,
+    verdictKeys: vd.def.keys,
   };
 
   // ── Show ─────────────────────────────────────────────────
@@ -2207,34 +2271,86 @@ function runTests() {
     }
   }
 
-  // ── getVerdict ────────────────────────────────────────────
-  results.push('\ngetVerdict:');
-  assert('≤ 420B → Plausible',         getVerdict(100e9).keys[0]   === 'v_pla_title');
-  assert('= 420B → Plausible',         getVerdict(420e9).keys[0]   === 'v_pla_title');
-  assert('421B → Speculative',         getVerdict(421e9).keys[0]   === 'v_spe_title');
-  assert('1.9T → Speculative',         getVerdict(1.9e12).keys[0]  === 'v_spe_title');
-  assert('2T → Ambitious',             getVerdict(2e12).keys[0]    === 'v_amb_title');
-  assert('3.5T → Ambitious',           getVerdict(3.5e12).keys[0]  === 'v_amb_title');
-  assert('4T → Unlikely',              getVerdict(4e12).keys[0]    === 'v_unl_title');
-  assert('14T → Unlikely',             getVerdict(14e12).keys[0]   === 'v_unl_title');
-  assert('15T → Delusional',           getVerdict(15e12).keys[0]   === 'v_del_title');
-  assert('110T → Delusional',          getVerdict(110e12).keys[0]  === 'v_del_title');
-  assert('111T → Math Impossible',     getVerdict(111e12).keys[0]  === 'v_math_title');
-  assert('454T → Math Impossible',     getVerdict(454e12).keys[0]  === 'v_math_title');
-  assert('455T → Cosmic Delusion',     getVerdict(455e12).keys[0]  === 'v_cosmic_title');
-  assert('Infinity → Cosmic Delusion', getVerdict(1e18).keys[0]    === 'v_cosmic_title');
+  // ── getVerdict: the leap ──────────────────────────────────
+  results.push('\ngetVerdict — the leap (multiple from today):');
+  const vi = (mcap, mult) => getVerdict(mcap, mult).index;
+  assert('1.003x on a $1.58T coin is not speculative',  vi(1.584e12, 1.003) === 0, vi(1.584e12, 1.003));
+  assert('2x  → Plausible',            vi(1e11, 2)    === 0, vi(1e11, 2));
+  assert('2.1x → Speculative',         vi(1e11, 2.1)  === 1, vi(1e11, 2.1));
+  assert('5x  → Speculative',          vi(1e11, 5)    === 1, vi(1e11, 5));
+  assert('6x  → Ambitious',            vi(1e11, 6)    === 2, vi(1e11, 6));
+  assert('25x → Ambitious',            vi(1e11, 25)   === 2, vi(1e11, 25));
+  assert('26x → Unlikely',             vi(1e11, 26)   === 3, vi(1e11, 26));
+  assert('100x → Unlikely',            vi(1e11, 100)  === 3, vi(1e11, 100));
+  assert('101x → Delusional',          vi(1e11, 101)  === 4, vi(1e11, 101));
+  assert('a 10,000,000x on a small coin is not plausible', vi(1e11, 1e7) === 4, vi(1e11, 1e7));
+  assert('the leap never reaches the two impossibility steps',
+    [2, 10, 50, 1e3, 1e9].every(m => vi(1e11, m) <= 4));
+  assert('a claim the price falls is not hopium', vi(1e11, 0.5) === 0, vi(1e11, 0.5));
 
-  // ── scalePos ──────────────────────────────────────────────
-  results.push('\nscalePos:');
-  assert('100B in zone 1 [2,14]',  scalePos(100e9)  >= 2  && scalePos(100e9)  <= 14,  scalePos(100e9).toFixed(1));
-  assert('1T in zone 2 [14,26]',   scalePos(1e12)   >= 14 && scalePos(1e12)   <= 26,  scalePos(1e12).toFixed(1));
-  assert('2.5T in zone 3 [26,38]', scalePos(2.5e12) >= 26 && scalePos(2.5e12) <= 38,  scalePos(2.5e12).toFixed(1));
-  assert('8T in zone 4 [38,54]',   scalePos(8e12)   >= 38 && scalePos(8e12)   <= 54,  scalePos(8e12).toFixed(1));
-  assert('50T in zone 5 [54,68]',  scalePos(50e12)  >= 54 && scalePos(50e12)  <= 68,  scalePos(50e12).toFixed(1));
-  assert('200T in zone 6 [68,82]', scalePos(200e12) >= 68 && scalePos(200e12) <= 82,  scalePos(200e12).toFixed(1));
-  assert('1000T in zone 7 [82,97]',scalePos(1000e12)>= 82 && scalePos(1000e12)<= 97, scalePos(1000e12).toFixed(1));
-  assert('verdict/bar aligned: 5T verdict=Unlikely zone=4',
-    getVerdict(5e12).keys[0] === 'v_unl_title' && scalePos(5e12) >= 38 && scalePos(5e12) <= 54);
+  // ── getVerdict: the ceiling ───────────────────────────────
+  results.push('\ngetVerdict — the ceiling (absolute size):');
+  assert('inside the crypto market → no penalty', vi(3.5e12, 1)  === 0, vi(3.5e12, 1));
+  assert('above the crypto market → Ambitious',   vi(3.6e12, 1)  === 2, vi(3.6e12, 1));
+  assert('above all gold → Delusional',           vi(15e12, 1)   === 4, vi(15e12, 1));
+  assert('above all stock markets → Impossible',  vi(111e12, 1)  === 5, vi(111e12, 1));
+  assert('above all human wealth → Cosmic',       vi(455e12, 1)  === 6, vi(455e12, 1));
+  assert('the ceiling still decides with no price given',
+    getVerdict(455e12, null).index === 6 && getVerdict(455e12, null).reason === 'cap');
+
+  // ── getVerdict: the worse of the two wins ─────────────────
+  results.push('\ngetVerdict — worse axis wins:');
+  assert('BTC to $200k: ceiling 2 beats leap 1',  vi(3.96e12, 2.5)  === 2, vi(3.96e12, 2.5));
+  assert('BTC to $1M: ceiling 4 beats leap 2',    vi(19.8e12, 12.5) === 4, vi(19.8e12, 12.5));
+  assert('small coin: leap 4 beats ceiling 0',
+    getVerdict(1e11, 1e7).reason === 'leap');
+  assert('big coin, small move: ceiling reason',
+    getVerdict(1.584e12, 1.003).reason === 'cap');
+
+  // ── score ─────────────────────────────────────────────────
+  results.push('\nverdict score:');
+  const sc = (m, x) => getVerdict(m, x).score;
+  assert('score stays in 2..98', [[1e9,1],[1e18,1e9],[1e11,1e7],[1.584e12,1.003]]
+    .every(([m,x]) => sc(m,x) >= 2 && sc(m,x) <= 98));
+  assert('a bigger leap never scores lower',
+    sc(1e11,2) <= sc(1e11,10) && sc(1e11,10) <= sc(1e11,1000));
+  assert('a bigger ceiling never scores lower',
+    sc(1e12,1) <= sc(20e12,1) && sc(20e12,1) <= sc(500e12,1));
+  assert('the rung and the score agree',
+    [[1.584e12,1.003],[3.96e12,2.5],[19.8e12,12.5],[1e11,1e7],[455e12,1]].every(([m,x]) => {
+      const v = getVerdict(m, x);
+      return v.score >= v.index / 7 * 100 && v.score <= (v.index + 1) / 7 * 100;
+    }));
+
+  // ── fmtX ──────────────────────────────────────────────────
+  results.push('\nfmtX:');
+  assert('2.5 → 2.5×',        fmtX(2.5)   === '2.5×',    fmtX(2.5));
+  assert('1200 → 1.2k×',      fmtX(1200)  === '1.2k×',   fmtX(1200));
+  assert('1e7 → 10.0M×',      fmtX(1e7)   === '10.0M×',  fmtX(1e7));
+  assert('4e9 → 4.0B×',       fmtX(4e9)   === '4.0B×',   fmtX(4e9));
+  assert('8e12 → 8.0T×',      fmtX(8e12)  === '8.0T×',   fmtX(8e12));
+  // T× is the top step on purpose: a multiple past a trillion is already
+  // past every verdict the scale has, so it keeps counting in T rather than
+  // growing a unit nobody reads.
+  assert('every step below the top stays under 1000',
+    [1e3, 1e6, 1e9].every(v => parseFloat(fmtX(v * 999)) < 1000), fmtX(1e9 * 999));
+  assert('the top step keeps counting', fmtX(1e15) === '1000.0T×', fmtX(1e15));
+  assert('a collapse keeps its digits', fmtX(0.0000125) === '0.000013×', fmtX(0.0000125));
+
+  // ── verdict copy ──────────────────────────────────────────
+  results.push('\nverdict copy:');
+  assert('every index the ceiling can produce has ceiling copy',
+    CAP_BANDS.every(b => typeof VERDICT_DEFS[b.index].keys[1] === 'string'),
+    CAP_BANDS.filter(b => !VERDICT_DEFS[b.index].keys[1]).map(b => b.index));
+  assert('every index the leap can produce above 0 has leap copy',
+    LEAP_BANDS.filter(b => b.index > 0).every(b => T.en[LEAP_SUBS[b.index]] && T.pt[LEAP_SUBS[b.index]]),
+    LEAP_BANDS.filter(b => b.index > 0 && !LEAP_SUBS[b.index]).map(b => b.index));
+  assert('no index is left without any copy at all',
+    VERDICT_DEFS.every((d, i) => d.keys[1] !== null || LEAP_SUBS[i] !== null));
+  assert('a leap verdict names the multiple',
+    verdictSub(getVerdict(1e11, 1e7), 1e7).includes(fmtX(1e7)));
+  assert('a size-only verdict says so',
+    verdictSub(getVerdict(455e12, null), null).includes(t('v_size_only')));
 
   // ── rulerPos (pure log axis, distinct from scalePos) ──────
   results.push('\nrulerPos:');
